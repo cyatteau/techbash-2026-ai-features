@@ -1,13 +1,856 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI talk demos</title><style>
-:root{color-scheme:light;--paper:#f6f7f5;--ink:#252c36;--muted:#626978;--green:var(--accent);--line:#dce1e5;--white:#fff;--error:#943b36;--accent:#b54332;--tint:#fcebe3}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:1120px;margin:0 auto;padding:36px 38px 42px}h1{font-size:clamp(36px,4.8vw,54px);line-height:1.08;letter-spacing:-1.8px;font-weight:750;margin:12px 0 14px}h2{font-size:28px;line-height:1.2;letter-spacing:-.6px;margin:0 0 18px}h3{font-size:20px;line-height:1.3;margin:0 0 8px}p{margin:10px 0 18px}.intro{max-width:760px;color:var(--muted);font-size:19px;margin-bottom:26px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);margin:0}.meta,.small{font-size:14px;color:var(--muted);line-height:1.5}.app-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;border-bottom:1px solid var(--line);gap:20px}.app-top a{font-size:13px;color:var(--muted);text-decoration:none}.app-top a:hover{text-decoration:underline}
-label{display:block;font-size:14px;font-weight:650;color:var(--ink)}select,input,textarea,button{font:inherit}select,input,textarea{display:block;width:100%;border:1px solid #bec7cf;border-radius:10px;background:var(--white);color:var(--ink);padding:12px 14px;margin-top:7px}select{min-height:48px}textarea{font:17px/1.6 system-ui,sans-serif;resize:vertical;min-height:132px}button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:11px 18px;font-size:16px;font-weight:650;line-height:1.5;cursor:pointer;transition:background .15s,transform .15s}button:hover{filter:brightness(.96)}button:active{transform:translateY(1px)}button:disabled,button[aria-disabled=true]{opacity:.48;cursor:default}.secondary,.choice{background:white;color:var(--ink);border-color:#bec7cf}.quiet{background:transparent;border-color:transparent;color:var(--accent);padding:8px 4px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.field{margin:20px 0}.controls{display:grid;grid-template-columns:1fr 1fr auto;gap:16px;align-items:end;padding:20px;background:var(--white);border:1px solid var(--line);border-radius:16px;margin:24px 0 12px}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px}[hidden]{display:none!important}#toolsToggle{display:none!important}
-#status{min-height:28px;font-size:15px;color:var(--muted);margin:16px 0 10px}#status[data-state=error],#unsupported{color:var(--error)}#origin{font-size:12px;line-height:1.5;color:var(--muted)}#origin:empty,#modeNotice:empty,#context:empty{display:none}
-article{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 36px;margin:18px 0 22px;box-shadow:0 8px 25px #29344206}#storyTitle{font-family:Georgia,serif;font-size:34px;font-weight:500;letter-spacing:-.7px;margin-top:10px}#storyText{font-family:Georgia,serif;font-size:21px;line-height:1.7;white-space:pre-line;min-height:96px;max-width:900px}#sceneCount{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase}#choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.choice{text-align:left;min-height:62px;padding:15px 18px;border-color:#d2d8df;border-radius:12px;background:var(--tint);font-weight:600}.choice:hover{border-color:var(--accent)}.footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-top:16px;border-top:1px solid var(--line)}.end{color:var(--accent)}
-details{margin:18px 0}summary{cursor:pointer;font-size:15px;font-weight:650;color:var(--accent)}pre{font:14px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;padding:18px;background:#f1f3f5;border-radius:10px;max-height:360px;overflow:auto}.tools{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin:24px 0;font-size:16px}.tools .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}.check{display:flex;align-items:center;gap:10px;font-weight:500;margin:16px 0}.check input{width:18px;min-height:18px;margin:0;accent-color:var(--accent)}#busy{font-size:13px;color:var(--muted)}#trace{max-height:220px;overflow:auto;font-size:14px}#savedList{list-style:none;padding:0}#savedList li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}#savedList span{flex:1}a{color:var(--accent)}nav{margin-top:24px;font-size:14px}
-.filter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.finder-results{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:start}.catalog-column h2{font-size:23px;margin-bottom:16px}.results{list-style:none;padding:0;margin:0;display:grid;gap:12px;max-height:465px;overflow:auto;padding-right:6px}.results li{padding:20px;background:white;border:1px solid var(--line);border-radius:14px}.results li.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--tint)}.results p{margin:6px 0}.result-meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 8px}.result-meta span{background:var(--tint);color:var(--accent);padding:3px 8px;border-radius:6px;font-size:12px;font-weight:650}.map-panel{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:white}.map-heading{padding:18px 20px 8px}.map-heading h2{font-size:21px;margin:0}.map-heading p{font-size:13px;margin:8px 0;color:var(--muted)}arcgis-map{display:block;width:100%;height:410px;background:#edf2ed}.map-footer{min-height:42px;padding:11px 18px;margin:0;font-size:12px;color:var(--muted)}#mapSelection{font-size:13px;color:var(--accent);margin:0 0 8px;min-height:20px}#query{min-height:90px}.search-request{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end;background:white;border:1px solid var(--line);border-radius:16px;padding:20px}.search-request .field{margin:0}.search-request .actions{padding-bottom:2px}.scope{font-size:12px;color:var(--muted);margin:16px 0}
-.columns,.layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}.columns>section,.layout>section,.composer{background:white;border:1px solid var(--line);border-radius:16px;padding:24px}.columns{margin-top:24px}.columns h2,.layout h2{font-size:23px}.columns label{margin-bottom:15px}#headline{margin-bottom:12px}#draft{min-height:244px}#original{min-height:105px}.composer{margin-top:24px}.composer .field{margin:0}.composer-controls{display:flex;gap:16px;align-items:end;margin-top:16px}.composer-controls label{width:210px}.composer-controls .actions{padding-bottom:1px}.guess{font-size:28px;font-weight:700;color:var(--accent);min-height:36px}canvas{display:block;width:100%;height:auto;background:white;border:1px solid #cbd5df;border-radius:12px;touch-action:none;cursor:crosshair}#kept{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}#keptImage{width:140px;height:100px;object-fit:contain;background:white;float:left;margin-right:16px}#kept:after{content:"";display:block;clear:both}.layout .actions{margin:16px 0}.layout textarea{min-height:142px}.lab-panel{margin:18px 0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 22px}.lab-panel summary{font-size:16px}.lab-panel .grid{grid-template-columns:1fr 1fr 1fr}.lab-controls{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}.lab-controls>div{min-width:0}.lab-controls .check{font-size:14px}.lab-controls .small{font-size:12px}.lab-story{margin-top:18px}
-@media(min-width:1500px){main{padding-top:52px}}@media(max-width:850px){.finder-results{grid-template-columns:1fr}.filter-grid{grid-template-columns:repeat(3,1fr)}.search-request{grid-template-columns:1fr}.results{max-height:none}.columns,.layout{grid-template-columns:1fr}.lab-controls{grid-template-columns:1fr}}@media(max-width:620px){main{padding:22px 18px 32px}h1{letter-spacing:-1px}.controls{grid-template-columns:1fr 1fr;padding:16px}.controls>button{grid-column:1/-1}article{padding:24px}#storyTitle{font-size:29px}#storyText{font-size:19px}#choices,.tools .grid,.filter-grid{grid-template-columns:1fr 1fr}.footer{align-items:flex-start;flex-direction:column}.composer-controls{align-items:stretch;flex-direction:column}.composer-controls label{width:100%}.columns>section,.layout>section{padding:20px}#savedList li{flex-wrap:wrap}#savedList span{flex-basis:100%}}@media(prefers-reduced-motion:reduce){button{transition:none}button:active{transform:none}}
-:root{--accent:#236c51;--tint:#eaf4eb}ol{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:18px}li{background:white;border:1px solid var(--line);border-radius:16px;padding:22px}li a{font-size:24px;font-weight:700;text-decoration:none}li p{font-size:16px}li .meta{font-size:13px}li:last-child{grid-column:1/-1}.ready{color:#236c51}.error{color:#943b36}code{font-size:14px}@media(max-width:700px){ol{grid-template-columns:1fr}}</style></head><body><main><div class="app-top"><p class="eyebrow">Courtney Yatteau / TechBash 2026</p><span class="small">Four features, one lab</span></div><h1>AI talk demos</h1><p>Five small browser demos from Building AI Features That Feel Fun Without Feeling Broken. Explore the features, read the code, and see how the app keeps people in control.</p><p><strong>Slides:</strong> <a href="Slides.pdf">View the audience slides (PDF)</a></p><p id="status" role="status" aria-live="polite">Checking the local server...</p><button id="check">Check setup again</button><ol><li><a href="01-adventure.html" target="_blank" rel="noopener">Tiny adventure</a><p>AI creates the next scene. Choose a story path and keep the exact ending.</p><p class="meta">Start with Haunted library and Silly. Three scenes, two choices, one story to keep.</p></li><li><a href="02-activity-finder.html" target="_blank" rel="noopener">Activity finder</a><p>AI suggests filters. Your app selects known catalog entries and maps their sample locations.</p><p class="meta">Start with all filters set to Any. The sample map uses illustrative locations.</p></li><li><a href="03-text-remixer.html" target="_blank" rel="noopener">Text remixer</a><p>Review a rewrite, edit it, then choose Apply or Undo.</p><p class="meta">Start with Friendly. Try changing the wording, applying the suggestion, and undoing.</p></li><li><a href="05-sketch-caption.html" target="_blank" rel="noopener">Sketch and Caption</a><p>Draw something, ask AI what it sees, and keep your reviewed description.</p><p class="meta">Start with a blank canvas or use Example sketch for a keyboard-accessible option.</p></li><li><a href="04-resilience-lab.html" target="_blank" rel="noopener">Timing and recovery lab</a><p>Repeatable simulations show old responses, cancellation, and recovery. The scripted lab makes no AI calls.</p><p class="meta">Three labeled simulations: late answers, Stop, and recovery. This lab needs no API key.</p></li></ol><p>Real AI needs a local <code>.env</code> with your own key and the Node 22+ server. Without a key, you can still explore prepared examples and the deterministic resilience lab. Use <code>node server.mjs</code> from this folder, then browse to <code>http://127.0.0.1:8787</code>.</p><p>A loaded key confirms configuration, not successful AI responses. Test a request to confirm the provider is working. All prepared examples are explicitly labeled.</p><p class="small">Alt+P reveals prepared examples on the feature pages. The activity finder map needs internet for ArcGIS and OpenStreetMap; manual catalog filtering still works if the map fails. <a href="https://github.com/cyatteau" rel="noopener">GitHub: @cyatteau</a>.</p></main><script>async function check(){const s=document.getElementById('status');s.className='';s.textContent='Checking the local server...';try{const r=await fetch('/health',{signal:AbortSignal.timeout(2000)});if(!r.ok)throw Error();const h=await r.json();s.className=h.configured?'ready':'error';s.textContent=h.configured?'Server ready. API key loaded. Open the demo tabs below.':'Server running, but no API key is loaded. Copy your existing .env beside server.mjs and restart.';}catch{s.className='error';s.textContent='Open this hub at http://127.0.0.1:8787 after starting the server. Keep the server window open.'}}document.getElementById('check').addEventListener('click',check);check();</script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AI talk demos</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f6f7f5;
+        --ink: #252c36;
+        --muted: #626978;
+        --green: var(--accent);
+        --line: #dce1e5;
+        --white: #fff;
+        --error: #943b36;
+        --accent: #b54332;
+        --tint: #fcebe3;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          18px/1.55 system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 36px 38px 42px;
+      }
+      h1 {
+        font-size: clamp(36px, 4.8vw, 54px);
+        line-height: 1.08;
+        letter-spacing: -1.8px;
+        font-weight: 750;
+        margin: 12px 0 14px;
+      }
+      h2 {
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: -0.6px;
+        margin: 0 0 18px;
+      }
+      h3 {
+        font-size: 20px;
+        line-height: 1.3;
+        margin: 0 0 8px;
+      }
+      p {
+        margin: 10px 0 18px;
+      }
+      .intro {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 19px;
+        margin-bottom: 26px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0;
+      }
+      .meta,
+      .small {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .app-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--line);
+        gap: 20px;
+      }
+      .app-top a {
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .app-top a:hover {
+        text-decoration: underline;
+      }
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: 650;
+        color: var(--ink);
+      }
+      select,
+      input,
+      textarea,
+      button {
+        font: inherit;
+      }
+      select,
+      input,
+      textarea {
+        display: block;
+        width: 100%;
+        border: 1px solid #bec7cf;
+        border-radius: 10px;
+        background: var(--white);
+        color: var(--ink);
+        padding: 12px 14px;
+        margin-top: 7px;
+      }
+      select {
+        min-height: 48px;
+      }
+      textarea {
+        font:
+          17px/1.6 system-ui,
+          sans-serif;
+        resize: vertical;
+        min-height: 132px;
+      }
+      button {
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        border-radius: 10px;
+        padding: 11px 18px;
+        font-size: 16px;
+        font-weight: 650;
+        line-height: 1.5;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.15s;
+      }
+      button:hover {
+        filter: brightness(0.96);
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      button:disabled,
+      button[aria-disabled="true"] {
+        opacity: 0.48;
+        cursor: default;
+      }
+      .secondary,
+      .choice {
+        background: white;
+        color: var(--ink);
+        border-color: #bec7cf;
+      }
+      .quiet {
+        background: transparent;
+        border-color: transparent;
+        color: var(--accent);
+        padding: 8px 4px;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .field {
+        margin: 20px 0;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 16px;
+        align-items: end;
+        padding: 20px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        margin: 24px 0 12px;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible,
+      a:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      #toolsToggle {
+        display: none !important;
+      }
+      #status {
+        min-height: 28px;
+        font-size: 15px;
+        color: var(--muted);
+        margin: 16px 0 10px;
+      }
+      #status[data-state="error"],
+      #unsupported {
+        color: var(--error);
+      }
+      #origin {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      #origin:empty,
+      #modeNotice:empty,
+      #context:empty {
+        display: none;
+      }
+      article {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 30px 36px;
+        margin: 18px 0 22px;
+        box-shadow: 0 8px 25px #29344206;
+      }
+      #storyTitle {
+        font-family: Georgia, serif;
+        font-size: 34px;
+        font-weight: 500;
+        letter-spacing: -0.7px;
+        margin-top: 10px;
+      }
+      #storyText {
+        font-family: Georgia, serif;
+        font-size: 21px;
+        line-height: 1.7;
+        white-space: pre-line;
+        min-height: 96px;
+        max-width: 900px;
+      }
+      #sceneCount {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      #choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .choice {
+        text-align: left;
+        min-height: 62px;
+        padding: 15px 18px;
+        border-color: #d2d8df;
+        border-radius: 12px;
+        background: var(--tint);
+        font-weight: 600;
+      }
+      .choice:hover {
+        border-color: var(--accent);
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .end {
+        color: var(--accent);
+      }
+      details {
+        margin: 18px 0;
+      }
+      summary {
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 650;
+        color: var(--accent);
+      }
+      pre {
+        font:
+          14px/1.5 ui-monospace,
+          monospace;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        padding: 18px;
+        background: #f1f3f5;
+        border-radius: 10px;
+        max-height: 360px;
+        overflow: auto;
+      }
+      .tools {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px;
+        margin: 24px 0;
+        font-size: 16px;
+      }
+      .tools .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin: 16px 0;
+      }
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        margin: 16px 0;
+      }
+      .check input {
+        width: 18px;
+        min-height: 18px;
+        margin: 0;
+        accent-color: var(--accent);
+      }
+      #busy {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #trace {
+        max-height: 220px;
+        overflow: auto;
+        font-size: 14px;
+      }
+      #savedList {
+        list-style: none;
+        padding: 0;
+      }
+      #savedList li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      #savedList span {
+        flex: 1;
+      }
+      a {
+        color: var(--accent);
+      }
+      nav {
+        margin-top: 24px;
+        font-size: 14px;
+      }
+      .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin: 18px 0;
+      }
+      .finder-results {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .catalog-column h2 {
+        font-size: 23px;
+        margin-bottom: 16px;
+      }
+      .results {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+        max-height: 465px;
+        overflow: auto;
+        padding-right: 6px;
+      }
+      .results li {
+        padding: 20px;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+      .results li.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--tint);
+      }
+      .results p {
+        margin: 6px 0;
+      }
+      .result-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin: 12px 0 8px;
+      }
+      .result-meta span {
+        background: var(--tint);
+        color: var(--accent);
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+      .map-panel {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+      }
+      .map-heading {
+        padding: 18px 20px 8px;
+      }
+      .map-heading h2 {
+        font-size: 21px;
+        margin: 0;
+      }
+      .map-heading p {
+        font-size: 13px;
+        margin: 8px 0;
+        color: var(--muted);
+      }
+      arcgis-map {
+        display: block;
+        width: 100%;
+        height: 410px;
+        background: #edf2ed;
+      }
+      .map-footer {
+        min-height: 42px;
+        padding: 11px 18px;
+        margin: 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      #mapSelection {
+        font-size: 13px;
+        color: var(--accent);
+        margin: 0 0 8px;
+        min-height: 20px;
+      }
+      #query {
+        min-height: 90px;
+      }
+      .search-request {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: end;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px;
+      }
+      .search-request .field {
+        margin: 0;
+      }
+      .search-request .actions {
+        padding-bottom: 2px;
+      }
+      .scope {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 16px 0;
+      }
+      .columns,
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      .columns > section,
+      .layout > section,
+      .composer {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+      }
+      .columns {
+        margin-top: 24px;
+      }
+      .columns h2,
+      .layout h2 {
+        font-size: 23px;
+      }
+      .columns label {
+        margin-bottom: 15px;
+      }
+      #headline {
+        margin-bottom: 12px;
+      }
+      #draft {
+        min-height: 244px;
+      }
+      #original {
+        min-height: 105px;
+      }
+      .composer {
+        margin-top: 24px;
+      }
+      .composer .field {
+        margin: 0;
+      }
+      .composer-controls {
+        display: flex;
+        gap: 16px;
+        align-items: end;
+        margin-top: 16px;
+      }
+      .composer-controls label {
+        width: 210px;
+      }
+      .composer-controls .actions {
+        padding-bottom: 1px;
+      }
+      .guess {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--accent);
+        min-height: 36px;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: white;
+        border: 1px solid #cbd5df;
+        border-radius: 12px;
+        touch-action: none;
+        cursor: crosshair;
+      }
+      #kept {
+        border-top: 1px solid var(--line);
+        margin-top: 24px;
+        padding-top: 20px;
+      }
+      #keptImage {
+        width: 140px;
+        height: 100px;
+        object-fit: contain;
+        background: white;
+        float: left;
+        margin-right: 16px;
+      }
+      #kept:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      .layout .actions {
+        margin: 16px 0;
+      }
+      .layout textarea {
+        min-height: 142px;
+      }
+      .lab-panel {
+        margin: 18px 0;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 22px;
+      }
+      .lab-panel summary {
+        font-size: 16px;
+      }
+      .lab-panel .grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .lab-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .lab-controls > div {
+        min-width: 0;
+      }
+      .lab-controls .check {
+        font-size: 14px;
+      }
+      .lab-controls .small {
+        font-size: 12px;
+      }
+      .lab-story {
+        margin-top: 18px;
+      }
+      @media (min-width: 1500px) {
+        main {
+          padding-top: 52px;
+        }
+      }
+      @media (max-width: 850px) {
+        .finder-results {
+          grid-template-columns: 1fr;
+        }
+        .filter-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .search-request {
+          grid-template-columns: 1fr;
+        }
+        .results {
+          max-height: none;
+        }
+        .columns,
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .lab-controls {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        main {
+          padding: 22px 18px 32px;
+        }
+        h1 {
+          letter-spacing: -1px;
+        }
+        .controls {
+          grid-template-columns: 1fr 1fr;
+          padding: 16px;
+        }
+        .controls > button {
+          grid-column: 1/-1;
+        }
+        article {
+          padding: 24px;
+        }
+        #storyTitle {
+          font-size: 29px;
+        }
+        #storyText {
+          font-size: 19px;
+        }
+        #choices,
+        .tools .grid,
+        .filter-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .composer-controls {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .composer-controls label {
+          width: 100%;
+        }
+        .columns > section,
+        .layout > section {
+          padding: 20px;
+        }
+        #savedList li {
+          flex-wrap: wrap;
+        }
+        #savedList span {
+          flex-basis: 100%;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        button {
+          transition: none;
+        }
+        button:active {
+          transform: none;
+        }
+      }
+      :root {
+        --accent: #236c51;
+        --tint: #eaf4eb;
+      }
+      ol {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      li {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px;
+      }
+      li a {
+        font-size: 24px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      li p {
+        font-size: 16px;
+      }
+      li .meta {
+        font-size: 13px;
+      }
+      li:last-child {
+        grid-column: 1/-1;
+      }
+      .ready {
+        color: #236c51;
+      }
+      .error {
+        color: #943b36;
+      }
+      code {
+        font-size: 14px;
+      }
+      @media (max-width: 700px) {
+        ol {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="app-top">
+        <p class="eyebrow">Courtney Yatteau / TechBash 2026</p>
+        <span class="small">Four features, one lab</span>
+      </div>
+      <h1>AI talk demos</h1>
+      <p>
+        Five small browser demos from Building AI Features That Feel Fun Without
+        Feeling Broken. Explore the features, read the code, and see how the app
+        keeps people in control.
+      </p>
+      <p>
+        <strong>Slides:</strong>
+        <a href="Slides.pdf">View the audience slides (PDF)</a>
+      </p>
+      <p id="status" role="status" aria-live="polite">
+        Checking the local server...
+      </p>
+      <button id="check">Check setup again</button>
+      <ol>
+        <li>
+          <a href="01-adventure.html" target="_blank" rel="noopener"
+            >Tiny adventure</a
+          >
+          <p>
+            AI creates the next scene. Choose a story path and keep the exact
+            ending.
+          </p>
+          <p class="meta">
+            Start with Haunted library and Silly. Three scenes, two choices, one
+            story to keep.
+          </p>
+        </li>
+        <li>
+          <a href="02-activity-finder.html" target="_blank" rel="noopener"
+            >Activity finder</a
+          >
+          <p>
+            AI suggests filters. Your app selects known catalog entries and maps
+            their sample locations.
+          </p>
+          <p class="meta">
+            Start with all filters set to Any. The sample map uses illustrative
+            locations.
+          </p>
+        </li>
+        <li>
+          <a href="03-text-remixer.html" target="_blank" rel="noopener"
+            >Text remixer</a
+          >
+          <p>Review a rewrite, edit it, then choose Apply or Undo.</p>
+          <p class="meta">
+            Start with Friendly. Try changing the wording, applying the
+            suggestion, and undoing.
+          </p>
+        </li>
+        <li>
+          <a href="05-sketch-caption.html" target="_blank" rel="noopener"
+            >Sketch and Caption</a
+          >
+          <p>
+            Draw something, ask AI what it sees, and keep your reviewed
+            description.
+          </p>
+          <p class="meta">
+            Start with a blank canvas or use Example sketch for a
+            keyboard-accessible option.
+          </p>
+        </li>
+        <li>
+          <a href="04-resilience-lab.html" target="_blank" rel="noopener"
+            >Timing and recovery lab</a
+          >
+          <p>
+            Repeatable simulations show old responses, cancellation, and
+            recovery. The scripted lab makes no AI calls.
+          </p>
+          <p class="meta">
+            Three labeled simulations: late answers, Stop, and recovery. This
+            lab needs no API key.
+          </p>
+        </li>
+      </ol>
+      <p>
+        Real AI needs a local <code>.env</code> with your own key and the Node
+        22+ server. Without a key, you can still explore prepared examples and
+        the deterministic resilience lab. Use <code>node server.mjs</code> from
+        this folder, then browse to <code>http://127.0.0.1:8787</code>.
+      </p>
+      <p>
+        A loaded key confirms configuration, not successful AI responses. Test a
+        request to confirm the provider is working. All prepared examples are
+        explicitly labeled.
+      </p>
+      <p class="small">
+        Alt+P reveals prepared examples on the feature pages. The activity
+        finder map needs internet for ArcGIS and OpenStreetMap; manual catalog
+        filtering still works if the map fails.
+        <a href="https://github.com/cyatteau" rel="noopener"
+          >GitHub: @cyatteau</a
+        >.
+      </p>
+    </main>
+    <script>
+      async function check() {
+        const s = document.getElementById("status");
+        s.className = "";
+        s.textContent = "Checking the local server...";
+        try {
+          const r = await fetch("/health", {
+            signal: AbortSignal.timeout(2000),
+          });
+          if (!r.ok) throw Error();
+          const h = await r.json();
+          s.className = h.configured ? "ready" : "error";
+          s.textContent = h.configured
+            ? "Server ready. API key loaded. Open the demo tabs below."
+            : "Server running, but no API key is loaded. Copy your existing .env beside server.mjs and restart.";
+        } catch {
+          s.className = "error";
+          s.textContent =
+            "Open this hub at http://127.0.0.1:8787 after starting the server. Keep the server window open.";
+        }
+      }
+      document.getElementById("check").addEventListener("click", check);
+      check();
+    </script>
+  </body>
+</html>

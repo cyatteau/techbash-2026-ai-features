@@ -1,109 +1,1202 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sketch & Caption</title>
-<style>
-:root{color-scheme:light;--paper:#f6f7f5;--ink:#252c36;--muted:#626978;--green:var(--accent);--line:#dce1e5;--white:#fff;--error:#943b36;--accent:#b54332;--tint:#fcebe3}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:1120px;margin:0 auto;padding:36px 38px 42px}h1{font-size:clamp(36px,4.8vw,54px);line-height:1.08;letter-spacing:-1.8px;font-weight:750;margin:12px 0 14px}h2{font-size:28px;line-height:1.2;letter-spacing:-.6px;margin:0 0 18px}h3{font-size:20px;line-height:1.3;margin:0 0 8px}p{margin:10px 0 18px}.intro{max-width:760px;color:var(--muted);font-size:19px;margin-bottom:26px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);margin:0}.meta,.small{font-size:14px;color:var(--muted);line-height:1.5}.app-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;border-bottom:1px solid var(--line);gap:20px}.app-top a{font-size:13px;color:var(--muted);text-decoration:none}.app-top a:hover{text-decoration:underline}
-label{display:block;font-size:14px;font-weight:650;color:var(--ink)}select,input,textarea,button{font:inherit}select,input,textarea{display:block;width:100%;border:1px solid #bec7cf;border-radius:10px;background:var(--white);color:var(--ink);padding:12px 14px;margin-top:7px}select{min-height:48px}textarea{font:17px/1.6 system-ui,sans-serif;resize:vertical;min-height:132px}button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:11px 18px;font-size:16px;font-weight:650;line-height:1.5;cursor:pointer;transition:background .15s,transform .15s}button:hover{filter:brightness(.96)}button:active{transform:translateY(1px)}button:disabled,button[aria-disabled=true]{opacity:.48;cursor:default}.secondary,.choice{background:white;color:var(--ink);border-color:#bec7cf}.quiet{background:transparent;border-color:transparent;color:var(--accent);padding:8px 4px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.field{margin:20px 0}.controls{display:grid;grid-template-columns:1fr 1fr auto;gap:16px;align-items:end;padding:20px;background:var(--white);border:1px solid var(--line);border-radius:16px;margin:24px 0 12px}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px}[hidden]{display:none!important}#toolsToggle{display:none!important}
-#status{min-height:28px;font-size:15px;color:var(--muted);margin:16px 0 10px}#status[data-state=error],#unsupported{color:var(--error)}#origin{font-size:12px;line-height:1.5;color:var(--muted)}#origin:empty,#modeNotice:empty,#context:empty{display:none}
-article{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 36px;margin:18px 0 22px;box-shadow:0 8px 25px #29344206}#storyTitle{font-family:Georgia,serif;font-size:34px;font-weight:500;letter-spacing:-.7px;margin-top:10px}#storyText{font-family:Georgia,serif;font-size:21px;line-height:1.7;white-space:pre-line;min-height:96px;max-width:900px}#sceneCount{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase}#choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.choice{text-align:left;min-height:62px;padding:15px 18px;border-color:#d2d8df;border-radius:12px;background:var(--tint);font-weight:600}.choice:hover{border-color:var(--accent)}.footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-top:16px;border-top:1px solid var(--line)}.end{color:var(--accent)}
-details{margin:18px 0}summary{cursor:pointer;font-size:15px;font-weight:650;color:var(--accent)}pre{font:14px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;padding:18px;background:#f1f3f5;border-radius:10px;max-height:360px;overflow:auto}.tools{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin:24px 0;font-size:16px}.tools .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}.check{display:flex;align-items:center;gap:10px;font-weight:500;margin:16px 0}.check input{width:18px;min-height:18px;margin:0;accent-color:var(--accent)}#busy{font-size:13px;color:var(--muted)}#trace{max-height:220px;overflow:auto;font-size:14px}#savedList{list-style:none;padding:0}#savedList li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}#savedList span{flex:1}a{color:var(--accent)}nav{margin-top:24px;font-size:14px}
-.filter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.finder-results{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:start}.catalog-column h2{font-size:23px;margin-bottom:16px}.results{list-style:none;padding:0;margin:0;display:grid;gap:12px;max-height:465px;overflow:auto;padding-right:6px}.results li{padding:20px;background:white;border:1px solid var(--line);border-radius:14px}.results li.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--tint)}.results p{margin:6px 0}.result-meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 8px}.result-meta span{background:var(--tint);color:var(--accent);padding:3px 8px;border-radius:6px;font-size:12px;font-weight:650}.map-panel{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:white}.map-heading{padding:18px 20px 8px}.map-heading h2{font-size:21px;margin:0}.map-heading p{font-size:13px;margin:8px 0;color:var(--muted)}arcgis-map{display:block;width:100%;height:410px;background:#edf2ed}.map-footer{min-height:42px;padding:11px 18px;margin:0;font-size:12px;color:var(--muted)}#mapSelection{font-size:13px;color:var(--accent);margin:0 0 8px;min-height:20px}#query{min-height:90px}.search-request{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end;background:white;border:1px solid var(--line);border-radius:16px;padding:20px}.search-request .field{margin:0}.search-request .actions{padding-bottom:2px}.scope{font-size:12px;color:var(--muted);margin:16px 0}
-.columns,.layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}.columns>section,.layout>section,.composer{background:white;border:1px solid var(--line);border-radius:16px;padding:24px}.columns{margin-top:24px}.columns h2,.layout h2{font-size:23px}.columns label{margin-bottom:15px}#headline{margin-bottom:12px}#draft{min-height:244px}#original{min-height:105px}.composer{margin-top:24px}.composer .field{margin:0}.composer-controls{display:flex;gap:16px;align-items:end;margin-top:16px}.composer-controls label{width:210px}.composer-controls .actions{padding-bottom:1px}.guess{font-size:28px;font-weight:700;color:var(--accent);min-height:36px}canvas{display:block;width:100%;height:auto;background:white;border:1px solid #cbd5df;border-radius:12px;touch-action:none;cursor:crosshair}#kept{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}#keptImage{width:140px;height:100px;object-fit:contain;background:white;float:left;margin-right:16px}#kept:after{content:"";display:block;clear:both}.layout .actions{margin:16px 0}.layout textarea{min-height:142px}.lab-panel{margin:18px 0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 22px}.lab-panel summary{font-size:16px}.lab-panel .grid{grid-template-columns:1fr 1fr 1fr}.lab-controls{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}.lab-controls>div{min-width:0}.lab-controls .check{font-size:14px}.lab-controls .small{font-size:12px}.lab-story{margin-top:18px}
-@media(min-width:1500px){main{padding-top:52px}}@media(max-width:850px){.finder-results{grid-template-columns:1fr}.filter-grid{grid-template-columns:repeat(3,1fr)}.search-request{grid-template-columns:1fr}.results{max-height:none}.columns,.layout{grid-template-columns:1fr}.lab-controls{grid-template-columns:1fr}}@media(max-width:620px){main{padding:22px 18px 32px}h1{letter-spacing:-1px}.controls{grid-template-columns:1fr 1fr;padding:16px}.controls>button{grid-column:1/-1}article{padding:24px}#storyTitle{font-size:29px}#storyText{font-size:19px}#choices,.tools .grid,.filter-grid{grid-template-columns:1fr 1fr}.footer{align-items:flex-start;flex-direction:column}.composer-controls{align-items:stretch;flex-direction:column}.composer-controls label{width:100%}.columns>section,.layout>section{padding:20px}#savedList li{flex-wrap:wrap}#savedList span{flex-basis:100%}}@media(prefers-reduced-motion:reduce){button{transition:none}button:active{transform:none}}
-:root{--accent:#285e9d;--tint:#eaf2fc}</style><style id="compact-layout">
-
-/* Compact presentation spacing. Content, controls and scripts are unchanged. */
-main{padding:18px 26px 22px}
-.app-top{padding-bottom:7px}
-h1{font-size:36px;line-height:1.1;letter-spacing:-1px;margin:9px 0 9px}
-h2{font-size:24px;margin-bottom:12px}
-h3{font-size:19px;margin-bottom:6px}
-p{margin:6px 0 10px}
-p:empty{margin:0}
-.eyebrow{margin:0}
-.intro{font-size:18px;margin-bottom:14px}
-button{padding:8px 14px}
-select,input,textarea{padding:8px 12px;margin-top:5px}
-select{min-height:40px}
-textarea{min-height:100px}
-.field{margin:12px 0}
-.controls{padding:12px 16px;margin:14px 0 8px;gap:14px}
-#status{min-height:22px;margin:8px 0 6px}
-#origin{margin:4px 0 8px}
-.small,.meta{line-height:1.4}
-article{padding:18px 22px;margin:12px 0}
-#storyTitle{font-size:29px;margin-top:7px;margin-bottom:10px}
-#storyText{font-size:20px;line-height:1.45;min-height:56px;margin:8px 0 12px}
-#choices{gap:10px;margin:14px 0}
-.choice{min-height:48px;padding:10px 14px}
-.footer{padding-top:10px;gap:12px}
-details{margin:10px 0}
-.quiet{padding:6px 4px}
-.tools{padding:16px;margin:14px 0}
-.tools .grid{margin:10px 0}
-#savedList li{padding:8px 0}
-.columns,.layout{gap:18px}
-.columns{margin-top:12px}
-.columns>section,.layout>section,.composer{padding:16px 18px}
-.columns h2,.layout h2{font-size:22px;margin-bottom:10px}
-.columns label{margin-bottom:10px}
-.composer{margin-top:14px}
-.composer-controls{margin-top:10px}
-.layout .actions{margin:10px 0}
-#headline{margin-bottom:8px}
-#kept{margin-top:16px;padding-top:14px}
-.guess{font-size:25px;min-height:30px}
-@media(min-width:1500px){main{padding-top:22px}}
-@media(max-width:620px){main{padding:16px 18px 22px}h1{font-size:32px}article{padding:16px 18px}.controls{padding:12px}.columns>section,.layout>section{padding:16px}}
-canvas{width:min(100%,300px);height:auto;margin:0 auto}
-.layout textarea{min-height:106px;height:106px}
-.layout .small{font-size:13px}
-.layout label{margin:10px 0 5px}
-</style></head>
-<body><main><div class="app-top"><p class="eyebrow">Sketch & Caption</p><a href="index.html">All demos</a></div><h1>Sketch & Caption</h1><p class="intro">Draw something simple. Let AI take a guess, then edit its description. Your drawing stays yours.</p>
-<div class="layout"><section aria-labelledby="drawingTitle"><h2 id="drawingTitle">Your sketch</h2><canvas id="canvas" width="560" height="400" aria-label="Drawing area. Use a pointer to draw, or use Example sketch below.">Use Example sketch to load a drawing without a pointer.</canvas><div class="actions"><button id="example" class="secondary">Example sketch</button><button id="clear" class="secondary">Clear drawing</button></div><p class="small">No drawing skill required. A house, flower, or very questionable cat will do. Example sketch also works with a keyboard.</p><div class="actions"><button id="ask">What do you see?</button><button id="stop" class="secondary" hidden>Stop request</button></div><p id="status" role="status" aria-live="polite">Draw something or load an example.</p></section>
-<section aria-labelledby="suggestionTitle"><h2 id="suggestionTitle">A suggestion to review</h2><p id="origin" class="small">No AI response yet</p><p id="guess" class="guess"></p><p id="uncertainty" class="small"></p><label for="description">Description</label><textarea id="description" maxlength="300" placeholder="You can write your own description here, too."></textarea><div class="actions"><button id="keep">Keep my description</button></div><p class="small">Check what is actually visible. You can change anything the model gets wrong.</p><section id="kept" hidden><h2>Kept version</h2><img id="keptImage" alt=""><p id="keptDescription"></p><p class="small">This keeps the exact drawing and your reviewed words for this session.</p></section></section></div>
-<details id="tools" class="tools" hidden><summary>Setup and backup</summary><label for="endpoint">Local server</label><input id="endpoint" type="url"><button id="sample" class="secondary">Load prepared example</button><p class="small">What do you see? sends the current canvas image to the configured AI provider through your local server. Example sketch draws locally. Load prepared example loads a fixed drawing and caption with no AI call.</p></details>
-</main><script>
-const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
-let version=0,controller=null,drawn=false,drawing=false,last=null,suggestionVersion=null;
-function status(message){$('status').textContent=message;}
-function exact(value,keys){if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==keys.length||keys.some(k=>!Object.hasOwn(value,k)))throw new Error('The response fields do not match this feature.');}
-function validate(value){exact(value,['guess','description','uncertainty']);for(const [key,max]of [['guess',80],['description',300],['uncertainty',200]])if(typeof value[key]!=='string'||value[key].length>max||(key!=='uncertainty'&&!value[key].trim()))throw new Error('The description did not fit this feature.');return value;}
-function controls(){$('ask').disabled=!drawn;$('stop').hidden=!controller;$('keep').disabled=!drawn||!$('description').value.trim()||(suggestionVersion!==null&&suggestionVersion!==version);}
-function invalidate(message){version++;controller?.abort();controller=null;controls();status(message);}
-function clearCanvas(){ctx.fillStyle='#ffffff';ctx.fillRect(0,0,canvas.width,canvas.height);drawn=false;}
-function point(event){const r=canvas.getBoundingClientRect();return{x:(event.clientX-r.left)*canvas.width/r.width,y:(event.clientY-r.top)*canvas.height/r.height};}
-canvas.addEventListener('pointerdown',event=>{if(event.button!==0)return;event.preventDefault();invalidate('Sketch changed. Ask AI again when you are ready.');drawing=true;last=point(event);canvas.setPointerCapture(event.pointerId);ctx.strokeStyle='#6451c8';ctx.fillStyle='#6451c8';ctx.lineWidth=7;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.arc(last.x,last.y,3.5,0,Math.PI*2);ctx.fill();drawn=true;controls();});
-canvas.addEventListener('pointermove',event=>{if(!drawing)return;const next=point(event);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(next.x,next.y);ctx.stroke();last=next;});
-function endDrawing(){drawing=false;last=null;}canvas.addEventListener('pointerup',endDrawing);canvas.addEventListener('pointercancel',endDrawing);
-function example(){invalidate('Example sketch loaded locally. Ask AI what it sees.');clearCanvas();ctx.strokeStyle='#6451c8';ctx.lineWidth=7;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(115,180);ctx.lineTo(280,65);ctx.lineTo(445,180);ctx.lineTo(115,180);ctx.moveTo(145,180);ctx.lineTo(145,335);ctx.lineTo(415,335);ctx.lineTo(415,180);ctx.moveTo(250,335);ctx.lineTo(250,245);ctx.lineTo(310,245);ctx.lineTo(310,335);ctx.rect(175,220,45,45);ctx.rect(340,220,45,45);ctx.stroke();drawn=true;controls();}
-$('example').addEventListener('click',example);
-$('clear').addEventListener('click',()=>{invalidate('Drawing cleared. Kept versions remain available.');clearCanvas();controls();});
-$('description').addEventListener('input',()=>{suggestionVersion=null;invalidate('Your description is ready to review and keep.');});
-$('endpoint').addEventListener('input',()=>invalidate('Server changed. Start a new request when ready.'));
-$('stop').addEventListener('click',()=>invalidate('Stopped. Your drawing and kept description stay here.'));
-$('ask').addEventListener('click',async()=>{
- if(!drawn)return;controller?.abort();const id=++version,work=new AbortController();controller=work;suggestionVersion=-1;const image=canvas.toDataURL('image/png');controls();status('Looking at your sketch. You can keep drawing or stop.');
- let timedOut=false;const timer=setTimeout(()=>{timedOut=true;work.abort();},18000);
- try{const base=$('endpoint').value.replace(/\/$/,'');if(!/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(base))throw new Error('Use the local demo server.');
- const response=await fetch(base+'/api/sketch',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({input:{image},requestId:crypto.randomUUID()}),signal:work.signal});const payload=await response.json();if(!response.ok)throw new Error(payload.error?.message||'The request failed.');validate(payload.result);if(id!==version||work.signal.aborted)return;
- $('guess').textContent='Looks like: '+payload.result.guess;$('description').value=payload.result.description;$('uncertainty').textContent=payload.result.uncertainty;$('origin').textContent=payload.origin||'Real AI vision';suggestionVersion=id;status('A suggested description is ready. Check it, edit it, then keep it.');
- }catch(error){if(id!==version)return;status(work.signal.aborted?(timedOut?'The request took too long. Your drawing is still here.':'Stopped. Your drawing is still here.'):error.message);}
- finally{clearTimeout(timer);if(id===version){controller=null;controls();}}
-});
-$('keep').addEventListener('click',()=>{if($('keep').disabled)return;$('keptImage').src=canvas.toDataURL('image/png');$('keptImage').alt=$('description').value.trim();$('keptDescription').textContent=$('description').value.trim();$('kept').hidden=false;status('Kept this exact drawing with your description for this session.');});
-$('sample').addEventListener('click',()=>{example();$('guess').textContent='Looks like: a house';$('description').value='A purple line drawing of a house with a triangular roof, two square windows, and a door.';$('uncertainty').textContent='';$('origin').textContent='Prepared example / no AI call';suggestionVersion=version;controls();status('Fixed example loaded. This did not call AI. Review and edit it before keeping.');});
-$('endpoint').value=location.protocol.startsWith('http')?location.origin:'http://127.0.0.1:8787';clearCanvas();controls();
-</script><script data-backstage>
-// Backstage controls stay out of the audience interface. Alt+P toggles them.
-if (typeof window !== 'undefined') window.addEventListener('keydown', event => {
- if (!event.altKey || event.key.toLowerCase() !== 'p' || event.repeat) return;
- event.preventDefault();
- const panel = document.getElementById('tools');
- panel.hidden = !panel.hidden;
- if (!panel.hidden) { panel.open = true; panel.scrollIntoView({behavior:'instant',block:'nearest'}); }
-});
-</script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sketch & Caption</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f6f7f5;
+        --ink: #252c36;
+        --muted: #626978;
+        --green: var(--accent);
+        --line: #dce1e5;
+        --white: #fff;
+        --error: #943b36;
+        --accent: #b54332;
+        --tint: #fcebe3;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          18px/1.55 system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 36px 38px 42px;
+      }
+      h1 {
+        font-size: clamp(36px, 4.8vw, 54px);
+        line-height: 1.08;
+        letter-spacing: -1.8px;
+        font-weight: 750;
+        margin: 12px 0 14px;
+      }
+      h2 {
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: -0.6px;
+        margin: 0 0 18px;
+      }
+      h3 {
+        font-size: 20px;
+        line-height: 1.3;
+        margin: 0 0 8px;
+      }
+      p {
+        margin: 10px 0 18px;
+      }
+      .intro {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 19px;
+        margin-bottom: 26px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0;
+      }
+      .meta,
+      .small {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .app-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--line);
+        gap: 20px;
+      }
+      .app-top a {
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .app-top a:hover {
+        text-decoration: underline;
+      }
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: 650;
+        color: var(--ink);
+      }
+      select,
+      input,
+      textarea,
+      button {
+        font: inherit;
+      }
+      select,
+      input,
+      textarea {
+        display: block;
+        width: 100%;
+        border: 1px solid #bec7cf;
+        border-radius: 10px;
+        background: var(--white);
+        color: var(--ink);
+        padding: 12px 14px;
+        margin-top: 7px;
+      }
+      select {
+        min-height: 48px;
+      }
+      textarea {
+        font:
+          17px/1.6 system-ui,
+          sans-serif;
+        resize: vertical;
+        min-height: 132px;
+      }
+      button {
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        border-radius: 10px;
+        padding: 11px 18px;
+        font-size: 16px;
+        font-weight: 650;
+        line-height: 1.5;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.15s;
+      }
+      button:hover {
+        filter: brightness(0.96);
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      button:disabled,
+      button[aria-disabled="true"] {
+        opacity: 0.48;
+        cursor: default;
+      }
+      .secondary,
+      .choice {
+        background: white;
+        color: var(--ink);
+        border-color: #bec7cf;
+      }
+      .quiet {
+        background: transparent;
+        border-color: transparent;
+        color: var(--accent);
+        padding: 8px 4px;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .field {
+        margin: 20px 0;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 16px;
+        align-items: end;
+        padding: 20px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        margin: 24px 0 12px;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible,
+      a:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      #toolsToggle {
+        display: none !important;
+      }
+      #status {
+        min-height: 28px;
+        font-size: 15px;
+        color: var(--muted);
+        margin: 16px 0 10px;
+      }
+      #status[data-state="error"],
+      #unsupported {
+        color: var(--error);
+      }
+      #origin {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      #origin:empty,
+      #modeNotice:empty,
+      #context:empty {
+        display: none;
+      }
+      article {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 30px 36px;
+        margin: 18px 0 22px;
+        box-shadow: 0 8px 25px #29344206;
+      }
+      #storyTitle {
+        font-family: Georgia, serif;
+        font-size: 34px;
+        font-weight: 500;
+        letter-spacing: -0.7px;
+        margin-top: 10px;
+      }
+      #storyText {
+        font-family: Georgia, serif;
+        font-size: 21px;
+        line-height: 1.7;
+        white-space: pre-line;
+        min-height: 96px;
+        max-width: 900px;
+      }
+      #sceneCount {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      #choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .choice {
+        text-align: left;
+        min-height: 62px;
+        padding: 15px 18px;
+        border-color: #d2d8df;
+        border-radius: 12px;
+        background: var(--tint);
+        font-weight: 600;
+      }
+      .choice:hover {
+        border-color: var(--accent);
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .end {
+        color: var(--accent);
+      }
+      details {
+        margin: 18px 0;
+      }
+      summary {
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 650;
+        color: var(--accent);
+      }
+      pre {
+        font:
+          14px/1.5 ui-monospace,
+          monospace;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        padding: 18px;
+        background: #f1f3f5;
+        border-radius: 10px;
+        max-height: 360px;
+        overflow: auto;
+      }
+      .tools {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px;
+        margin: 24px 0;
+        font-size: 16px;
+      }
+      .tools .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin: 16px 0;
+      }
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        margin: 16px 0;
+      }
+      .check input {
+        width: 18px;
+        min-height: 18px;
+        margin: 0;
+        accent-color: var(--accent);
+      }
+      #busy {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #trace {
+        max-height: 220px;
+        overflow: auto;
+        font-size: 14px;
+      }
+      #savedList {
+        list-style: none;
+        padding: 0;
+      }
+      #savedList li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      #savedList span {
+        flex: 1;
+      }
+      a {
+        color: var(--accent);
+      }
+      nav {
+        margin-top: 24px;
+        font-size: 14px;
+      }
+      .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin: 18px 0;
+      }
+      .finder-results {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .catalog-column h2 {
+        font-size: 23px;
+        margin-bottom: 16px;
+      }
+      .results {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+        max-height: 465px;
+        overflow: auto;
+        padding-right: 6px;
+      }
+      .results li {
+        padding: 20px;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+      .results li.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--tint);
+      }
+      .results p {
+        margin: 6px 0;
+      }
+      .result-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin: 12px 0 8px;
+      }
+      .result-meta span {
+        background: var(--tint);
+        color: var(--accent);
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+      .map-panel {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+      }
+      .map-heading {
+        padding: 18px 20px 8px;
+      }
+      .map-heading h2 {
+        font-size: 21px;
+        margin: 0;
+      }
+      .map-heading p {
+        font-size: 13px;
+        margin: 8px 0;
+        color: var(--muted);
+      }
+      arcgis-map {
+        display: block;
+        width: 100%;
+        height: 410px;
+        background: #edf2ed;
+      }
+      .map-footer {
+        min-height: 42px;
+        padding: 11px 18px;
+        margin: 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      #mapSelection {
+        font-size: 13px;
+        color: var(--accent);
+        margin: 0 0 8px;
+        min-height: 20px;
+      }
+      #query {
+        min-height: 90px;
+      }
+      .search-request {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: end;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px;
+      }
+      .search-request .field {
+        margin: 0;
+      }
+      .search-request .actions {
+        padding-bottom: 2px;
+      }
+      .scope {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 16px 0;
+      }
+      .columns,
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      .columns > section,
+      .layout > section,
+      .composer {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+      }
+      .columns {
+        margin-top: 24px;
+      }
+      .columns h2,
+      .layout h2 {
+        font-size: 23px;
+      }
+      .columns label {
+        margin-bottom: 15px;
+      }
+      #headline {
+        margin-bottom: 12px;
+      }
+      #draft {
+        min-height: 244px;
+      }
+      #original {
+        min-height: 105px;
+      }
+      .composer {
+        margin-top: 24px;
+      }
+      .composer .field {
+        margin: 0;
+      }
+      .composer-controls {
+        display: flex;
+        gap: 16px;
+        align-items: end;
+        margin-top: 16px;
+      }
+      .composer-controls label {
+        width: 210px;
+      }
+      .composer-controls .actions {
+        padding-bottom: 1px;
+      }
+      .guess {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--accent);
+        min-height: 36px;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: white;
+        border: 1px solid #cbd5df;
+        border-radius: 12px;
+        touch-action: none;
+        cursor: crosshair;
+      }
+      #kept {
+        border-top: 1px solid var(--line);
+        margin-top: 24px;
+        padding-top: 20px;
+      }
+      #keptImage {
+        width: 140px;
+        height: 100px;
+        object-fit: contain;
+        background: white;
+        float: left;
+        margin-right: 16px;
+      }
+      #kept:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      .layout .actions {
+        margin: 16px 0;
+      }
+      .layout textarea {
+        min-height: 142px;
+      }
+      .lab-panel {
+        margin: 18px 0;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 22px;
+      }
+      .lab-panel summary {
+        font-size: 16px;
+      }
+      .lab-panel .grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .lab-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .lab-controls > div {
+        min-width: 0;
+      }
+      .lab-controls .check {
+        font-size: 14px;
+      }
+      .lab-controls .small {
+        font-size: 12px;
+      }
+      .lab-story {
+        margin-top: 18px;
+      }
+      @media (min-width: 1500px) {
+        main {
+          padding-top: 52px;
+        }
+      }
+      @media (max-width: 850px) {
+        .finder-results {
+          grid-template-columns: 1fr;
+        }
+        .filter-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .search-request {
+          grid-template-columns: 1fr;
+        }
+        .results {
+          max-height: none;
+        }
+        .columns,
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .lab-controls {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        main {
+          padding: 22px 18px 32px;
+        }
+        h1 {
+          letter-spacing: -1px;
+        }
+        .controls {
+          grid-template-columns: 1fr 1fr;
+          padding: 16px;
+        }
+        .controls > button {
+          grid-column: 1/-1;
+        }
+        article {
+          padding: 24px;
+        }
+        #storyTitle {
+          font-size: 29px;
+        }
+        #storyText {
+          font-size: 19px;
+        }
+        #choices,
+        .tools .grid,
+        .filter-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .composer-controls {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .composer-controls label {
+          width: 100%;
+        }
+        .columns > section,
+        .layout > section {
+          padding: 20px;
+        }
+        #savedList li {
+          flex-wrap: wrap;
+        }
+        #savedList span {
+          flex-basis: 100%;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        button {
+          transition: none;
+        }
+        button:active {
+          transform: none;
+        }
+      }
+      :root {
+        --accent: #285e9d;
+        --tint: #eaf2fc;
+      }
+    </style>
+    <style id="compact-layout">
+      /* Compact presentation spacing. Content, controls and scripts are unchanged. */
+      main {
+        padding: 18px 26px 22px;
+      }
+      .app-top {
+        padding-bottom: 7px;
+      }
+      h1 {
+        font-size: 36px;
+        line-height: 1.1;
+        letter-spacing: -1px;
+        margin: 9px 0 9px;
+      }
+      h2 {
+        font-size: 24px;
+        margin-bottom: 12px;
+      }
+      h3 {
+        font-size: 19px;
+        margin-bottom: 6px;
+      }
+      p {
+        margin: 6px 0 10px;
+      }
+      p:empty {
+        margin: 0;
+      }
+      .eyebrow {
+        margin: 0;
+      }
+      .intro {
+        font-size: 18px;
+        margin-bottom: 14px;
+      }
+      button {
+        padding: 8px 14px;
+      }
+      select,
+      input,
+      textarea {
+        padding: 8px 12px;
+        margin-top: 5px;
+      }
+      select {
+        min-height: 40px;
+      }
+      textarea {
+        min-height: 100px;
+      }
+      .field {
+        margin: 12px 0;
+      }
+      .controls {
+        padding: 12px 16px;
+        margin: 14px 0 8px;
+        gap: 14px;
+      }
+      #status {
+        min-height: 22px;
+        margin: 8px 0 6px;
+      }
+      #origin {
+        margin: 4px 0 8px;
+      }
+      .small,
+      .meta {
+        line-height: 1.4;
+      }
+      article {
+        padding: 18px 22px;
+        margin: 12px 0;
+      }
+      #storyTitle {
+        font-size: 29px;
+        margin-top: 7px;
+        margin-bottom: 10px;
+      }
+      #storyText {
+        font-size: 20px;
+        line-height: 1.45;
+        min-height: 56px;
+        margin: 8px 0 12px;
+      }
+      #choices {
+        gap: 10px;
+        margin: 14px 0;
+      }
+      .choice {
+        min-height: 48px;
+        padding: 10px 14px;
+      }
+      .footer {
+        padding-top: 10px;
+        gap: 12px;
+      }
+      details {
+        margin: 10px 0;
+      }
+      .quiet {
+        padding: 6px 4px;
+      }
+      .tools {
+        padding: 16px;
+        margin: 14px 0;
+      }
+      .tools .grid {
+        margin: 10px 0;
+      }
+      #savedList li {
+        padding: 8px 0;
+      }
+      .columns,
+      .layout {
+        gap: 18px;
+      }
+      .columns {
+        margin-top: 12px;
+      }
+      .columns > section,
+      .layout > section,
+      .composer {
+        padding: 16px 18px;
+      }
+      .columns h2,
+      .layout h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+      .columns label {
+        margin-bottom: 10px;
+      }
+      .composer {
+        margin-top: 14px;
+      }
+      .composer-controls {
+        margin-top: 10px;
+      }
+      .layout .actions {
+        margin: 10px 0;
+      }
+      #headline {
+        margin-bottom: 8px;
+      }
+      #kept {
+        margin-top: 16px;
+        padding-top: 14px;
+      }
+      .guess {
+        font-size: 25px;
+        min-height: 30px;
+      }
+      @media (min-width: 1500px) {
+        main {
+          padding-top: 22px;
+        }
+      }
+      @media (max-width: 620px) {
+        main {
+          padding: 16px 18px 22px;
+        }
+        h1 {
+          font-size: 32px;
+        }
+        article {
+          padding: 16px 18px;
+        }
+        .controls {
+          padding: 12px;
+        }
+        .columns > section,
+        .layout > section {
+          padding: 16px;
+        }
+      }
+      canvas {
+        width: min(100%, 300px);
+        height: auto;
+        margin: 0 auto;
+      }
+      .layout textarea {
+        min-height: 106px;
+        height: 106px;
+      }
+      .layout .small {
+        font-size: 13px;
+      }
+      .layout label {
+        margin: 10px 0 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="app-top">
+        <p class="eyebrow">Sketch & Caption</p>
+        <a href="index.html">All demos</a>
+      </div>
+      <h1>Sketch & Caption</h1>
+      <p class="intro">
+        Draw something simple. Let AI take a guess, then edit its description.
+        Your drawing stays yours.
+      </p>
+      <div class="layout">
+        <section aria-labelledby="drawingTitle">
+          <h2 id="drawingTitle">Your sketch</h2>
+          <canvas
+            id="canvas"
+            width="560"
+            height="400"
+            aria-label="Drawing area. Use a pointer to draw, or use Example sketch below."
+            >Use Example sketch to load a drawing without a pointer.</canvas
+          >
+          <div class="actions">
+            <button id="example" class="secondary">Example sketch</button
+            ><button id="clear" class="secondary">Clear drawing</button>
+          </div>
+          <p class="small">
+            No drawing skill required. A house, flower, or very questionable cat
+            will do. Example sketch also works with a keyboard.
+          </p>
+          <div class="actions">
+            <button id="ask">What do you see?</button
+            ><button id="stop" class="secondary" hidden>Stop request</button>
+          </div>
+          <p id="status" role="status" aria-live="polite">
+            Draw something or load an example.
+          </p>
+        </section>
+        <section aria-labelledby="suggestionTitle">
+          <h2 id="suggestionTitle">A suggestion to review</h2>
+          <p id="origin" class="small">No AI response yet</p>
+          <p id="guess" class="guess"></p>
+          <p id="uncertainty" class="small"></p>
+          <label for="description">Description</label
+          ><textarea
+            id="description"
+            maxlength="300"
+            placeholder="You can write your own description here, too."
+          ></textarea>
+          <div class="actions">
+            <button id="keep">Keep my description</button>
+          </div>
+          <p class="small">
+            Check what is actually visible. You can change anything the model
+            gets wrong.
+          </p>
+          <section id="kept" hidden>
+            <h2>Kept version</h2>
+            <img id="keptImage" alt="" />
+            <p id="keptDescription"></p>
+            <p class="small">
+              This keeps the exact drawing and your reviewed words for this
+              session.
+            </p>
+          </section>
+        </section>
+      </div>
+      <details id="tools" class="tools" hidden>
+        <summary>Setup and backup</summary>
+        <label for="endpoint">Local server</label
+        ><input id="endpoint" type="url" /><button
+          id="sample"
+          class="secondary"
+        >
+          Load prepared example
+        </button>
+        <p class="small">
+          What do you see? sends the current canvas image to the configured AI
+          provider through your local server. Example sketch draws locally. Load
+          prepared example loads a fixed drawing and caption with no AI call.
+        </p>
+      </details>
+    </main>
+    <script>
+      const $ = (id) => document.getElementById(id),
+        canvas = $("canvas"),
+        ctx = canvas.getContext("2d");
+      let version = 0,
+        controller = null,
+        drawn = false,
+        drawing = false,
+        last = null,
+        suggestionVersion = null;
+      function status(message) {
+        $("status").textContent = message;
+      }
+      function exact(value, keys) {
+        if (
+          !value ||
+          typeof value !== "object" ||
+          Array.isArray(value) ||
+          Object.keys(value).length !== keys.length ||
+          keys.some((k) => !Object.hasOwn(value, k))
+        )
+          throw new Error("The response fields do not match this feature.");
+      }
+      function validate(value) {
+        exact(value, ["guess", "description", "uncertainty"]);
+        for (const [key, max] of [
+          ["guess", 80],
+          ["description", 300],
+          ["uncertainty", 200],
+        ])
+          if (
+            typeof value[key] !== "string" ||
+            value[key].length > max ||
+            (key !== "uncertainty" && !value[key].trim())
+          )
+            throw new Error("The description did not fit this feature.");
+        return value;
+      }
+      function controls() {
+        $("ask").disabled = !drawn;
+        $("stop").hidden = !controller;
+        $("keep").disabled =
+          !drawn ||
+          !$("description").value.trim() ||
+          (suggestionVersion !== null && suggestionVersion !== version);
+      }
+      function invalidate(message) {
+        version++;
+        controller?.abort();
+        controller = null;
+        controls();
+        status(message);
+      }
+      function clearCanvas() {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawn = false;
+      }
+      function point(event) {
+        const r = canvas.getBoundingClientRect();
+        return {
+          x: ((event.clientX - r.left) * canvas.width) / r.width,
+          y: ((event.clientY - r.top) * canvas.height) / r.height,
+        };
+      }
+      canvas.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        invalidate("Sketch changed. Ask AI again when you are ready.");
+        drawing = true;
+        last = point(event);
+        canvas.setPointerCapture(event.pointerId);
+        ctx.strokeStyle = "#6451c8";
+        ctx.fillStyle = "#6451c8";
+        ctx.lineWidth = 7;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        ctx.arc(last.x, last.y, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        drawn = true;
+        controls();
+      });
+      canvas.addEventListener("pointermove", (event) => {
+        if (!drawing) return;
+        const next = point(event);
+        ctx.beginPath();
+        ctx.moveTo(last.x, last.y);
+        ctx.lineTo(next.x, next.y);
+        ctx.stroke();
+        last = next;
+      });
+      function endDrawing() {
+        drawing = false;
+        last = null;
+      }
+      canvas.addEventListener("pointerup", endDrawing);
+      canvas.addEventListener("pointercancel", endDrawing);
+      function example() {
+        invalidate("Example sketch loaded locally. Ask AI what it sees.");
+        clearCanvas();
+        ctx.strokeStyle = "#6451c8";
+        ctx.lineWidth = 7;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        ctx.moveTo(115, 180);
+        ctx.lineTo(280, 65);
+        ctx.lineTo(445, 180);
+        ctx.lineTo(115, 180);
+        ctx.moveTo(145, 180);
+        ctx.lineTo(145, 335);
+        ctx.lineTo(415, 335);
+        ctx.lineTo(415, 180);
+        ctx.moveTo(250, 335);
+        ctx.lineTo(250, 245);
+        ctx.lineTo(310, 245);
+        ctx.lineTo(310, 335);
+        ctx.rect(175, 220, 45, 45);
+        ctx.rect(340, 220, 45, 45);
+        ctx.stroke();
+        drawn = true;
+        controls();
+      }
+      $("example").addEventListener("click", example);
+      $("clear").addEventListener("click", () => {
+        invalidate("Drawing cleared. Kept versions remain available.");
+        clearCanvas();
+        controls();
+      });
+      $("description").addEventListener("input", () => {
+        suggestionVersion = null;
+        invalidate("Your description is ready to review and keep.");
+      });
+      $("endpoint").addEventListener("input", () =>
+        invalidate("Server changed. Start a new request when ready."),
+      );
+      $("stop").addEventListener("click", () =>
+        invalidate("Stopped. Your drawing and kept description stay here."),
+      );
+      $("ask").addEventListener("click", async () => {
+        if (!drawn) return;
+        controller?.abort();
+        const id = ++version,
+          work = new AbortController();
+        controller = work;
+        suggestionVersion = -1;
+        const image = canvas.toDataURL("image/png");
+        controls();
+        status("Looking at your sketch. You can keep drawing or stop.");
+        let timedOut = false;
+        const timer = setTimeout(() => {
+          timedOut = true;
+          work.abort();
+        }, 18000);
+        try {
+          const base = $("endpoint").value.replace(/\/$/, "");
+          if (!/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(base))
+            throw new Error("Use the local demo server.");
+          const response = await fetch(base + "/api/sketch", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              input: { image },
+              requestId: crypto.randomUUID(),
+            }),
+            signal: work.signal,
+          });
+          const payload = await response.json();
+          if (!response.ok)
+            throw new Error(payload.error?.message || "The request failed.");
+          validate(payload.result);
+          if (id !== version || work.signal.aborted) return;
+          $("guess").textContent = "Looks like: " + payload.result.guess;
+          $("description").value = payload.result.description;
+          $("uncertainty").textContent = payload.result.uncertainty;
+          $("origin").textContent = payload.origin || "Real AI vision";
+          suggestionVersion = id;
+          status(
+            "A suggested description is ready. Check it, edit it, then keep it.",
+          );
+        } catch (error) {
+          if (id !== version) return;
+          status(
+            work.signal.aborted
+              ? timedOut
+                ? "The request took too long. Your drawing is still here."
+                : "Stopped. Your drawing is still here."
+              : error.message,
+          );
+        } finally {
+          clearTimeout(timer);
+          if (id === version) {
+            controller = null;
+            controls();
+          }
+        }
+      });
+      $("keep").addEventListener("click", () => {
+        if ($("keep").disabled) return;
+        $("keptImage").src = canvas.toDataURL("image/png");
+        $("keptImage").alt = $("description").value.trim();
+        $("keptDescription").textContent = $("description").value.trim();
+        $("kept").hidden = false;
+        status(
+          "Kept this exact drawing with your description for this session.",
+        );
+      });
+      $("sample").addEventListener("click", () => {
+        example();
+        $("guess").textContent = "Looks like: a house";
+        $("description").value =
+          "A purple line drawing of a house with a triangular roof, two square windows, and a door.";
+        $("uncertainty").textContent = "";
+        $("origin").textContent = "Prepared example / no AI call";
+        suggestionVersion = version;
+        controls();
+        status(
+          "Fixed example loaded. This did not call AI. Review and edit it before keeping.",
+        );
+      });
+      $("endpoint").value = location.protocol.startsWith("http")
+        ? location.origin
+        : "http://127.0.0.1:8787";
+      clearCanvas();
+      controls();
+    </script>
+    <script data-backstage>
+      // Backstage controls stay out of the audience interface. Alt+P toggles them.
+      if (typeof window !== "undefined")
+        window.addEventListener("keydown", (event) => {
+          if (!event.altKey || event.key.toLowerCase() !== "p" || event.repeat)
+            return;
+          event.preventDefault();
+          const panel = document.getElementById("tools");
+          panel.hidden = !panel.hidden;
+          if (!panel.hidden) {
+            panel.open = true;
+            panel.scrollIntoView({ behavior: "instant", block: "nearest" });
+          }
+        });
+    </script>
+  </body>
+</html>

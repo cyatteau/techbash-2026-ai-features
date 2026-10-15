@@ -1,295 +1,1791 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Find something for me</title><style>
-:root{color-scheme:light;--paper:#f6f7f5;--ink:#252c36;--muted:#626978;--green:var(--accent);--line:#dce1e5;--white:#fff;--error:#943b36;--accent:#b54332;--tint:#fcebe3}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:1120px;margin:0 auto;padding:36px 38px 42px}h1{font-size:clamp(36px,4.8vw,54px);line-height:1.08;letter-spacing:-1.8px;font-weight:750;margin:12px 0 14px}h2{font-size:28px;line-height:1.2;letter-spacing:-.6px;margin:0 0 18px}h3{font-size:20px;line-height:1.3;margin:0 0 8px}p{margin:10px 0 18px}.intro{max-width:760px;color:var(--muted);font-size:19px;margin-bottom:26px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);margin:0}.meta,.small{font-size:14px;color:var(--muted);line-height:1.5}.app-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;border-bottom:1px solid var(--line);gap:20px}.app-top a{font-size:13px;color:var(--muted);text-decoration:none}.app-top a:hover{text-decoration:underline}
-label{display:block;font-size:14px;font-weight:650;color:var(--ink)}select,input,textarea,button{font:inherit}select,input,textarea{display:block;width:100%;border:1px solid #bec7cf;border-radius:10px;background:var(--white);color:var(--ink);padding:12px 14px;margin-top:7px}select{min-height:48px}textarea{font:17px/1.6 system-ui,sans-serif;resize:vertical;min-height:132px}button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:11px 18px;font-size:16px;font-weight:650;line-height:1.5;cursor:pointer;transition:background .15s,transform .15s}button:hover{filter:brightness(.96)}button:active{transform:translateY(1px)}button:disabled,button[aria-disabled=true]{opacity:.48;cursor:default}.secondary,.choice{background:white;color:var(--ink);border-color:#bec7cf}.quiet{background:transparent;border-color:transparent;color:var(--accent);padding:8px 4px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.field{margin:20px 0}.controls{display:grid;grid-template-columns:1fr 1fr auto;gap:16px;align-items:end;padding:20px;background:var(--white);border:1px solid var(--line);border-radius:16px;margin:24px 0 12px}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px}[hidden]{display:none!important}#toolsToggle{display:none!important}
-#status{min-height:28px;font-size:15px;color:var(--muted);margin:16px 0 10px}#status[data-state=error],#unsupported{color:var(--error)}#origin{font-size:12px;line-height:1.5;color:var(--muted)}#origin:empty,#modeNotice:empty,#context:empty{display:none}
-article{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 36px;margin:18px 0 22px;box-shadow:0 8px 25px #29344206}#storyTitle{font-family:Georgia,serif;font-size:34px;font-weight:500;letter-spacing:-.7px;margin-top:10px}#storyText{font-family:Georgia,serif;font-size:21px;line-height:1.7;white-space:pre-line;min-height:96px;max-width:900px}#sceneCount{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase}#choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.choice{text-align:left;min-height:62px;padding:15px 18px;border-color:#d2d8df;border-radius:12px;background:var(--tint);font-weight:600}.choice:hover{border-color:var(--accent)}.footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-top:16px;border-top:1px solid var(--line)}.end{color:var(--accent)}
-details{margin:18px 0}summary{cursor:pointer;font-size:15px;font-weight:650;color:var(--accent)}pre{font:14px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;padding:18px;background:#f1f3f5;border-radius:10px;max-height:360px;overflow:auto}.tools{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin:24px 0;font-size:16px}.tools .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}.check{display:flex;align-items:center;gap:10px;font-weight:500;margin:16px 0}.check input{width:18px;min-height:18px;margin:0;accent-color:var(--accent)}#busy{font-size:13px;color:var(--muted)}#trace{max-height:220px;overflow:auto;font-size:14px}#savedList{list-style:none;padding:0}#savedList li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}#savedList span{flex:1}a{color:var(--accent)}nav{margin-top:24px;font-size:14px}
-.filter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.finder-results{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:start}.catalog-column h2{font-size:23px;margin-bottom:16px}.results{list-style:none;padding:0;margin:0;display:grid;gap:12px;max-height:465px;overflow:auto;padding-right:6px}.results li{padding:20px;background:white;border:1px solid var(--line);border-radius:14px}.results li.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--tint)}.results p{margin:6px 0}.result-meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 8px}.result-meta span{background:var(--tint);color:var(--accent);padding:3px 8px;border-radius:6px;font-size:12px;font-weight:650}.map-panel{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:white}.map-heading{padding:18px 20px 8px}.map-heading h2{font-size:21px;margin:0}.map-heading p{font-size:13px;margin:8px 0;color:var(--muted)}arcgis-map{display:block;width:100%;height:410px;background:#edf2ed}.map-footer{min-height:42px;padding:11px 18px;margin:0;font-size:12px;color:var(--muted)}#mapSelection{font-size:13px;color:var(--accent);margin:0 0 8px;min-height:20px}#query{min-height:90px}.search-request{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end;background:white;border:1px solid var(--line);border-radius:16px;padding:20px}.search-request .field{margin:0}.search-request .actions{padding-bottom:2px}.scope{font-size:12px;color:var(--muted);margin:16px 0}
-.columns,.layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}.columns>section,.layout>section,.composer{background:white;border:1px solid var(--line);border-radius:16px;padding:24px}.columns{margin-top:24px}.columns h2,.layout h2{font-size:23px}.columns label{margin-bottom:15px}#headline{margin-bottom:12px}#draft{min-height:244px}#original{min-height:105px}.composer{margin-top:24px}.composer .field{margin:0}.composer-controls{display:flex;gap:16px;align-items:end;margin-top:16px}.composer-controls label{width:210px}.composer-controls .actions{padding-bottom:1px}.guess{font-size:28px;font-weight:700;color:var(--accent);min-height:36px}canvas{display:block;width:100%;height:auto;background:white;border:1px solid #cbd5df;border-radius:12px;touch-action:none;cursor:crosshair}#kept{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}#keptImage{width:140px;height:100px;object-fit:contain;background:white;float:left;margin-right:16px}#kept:after{content:"";display:block;clear:both}.layout .actions{margin:16px 0}.layout textarea{min-height:142px}.lab-panel{margin:18px 0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 22px}.lab-panel summary{font-size:16px}.lab-panel .grid{grid-template-columns:1fr 1fr 1fr}.lab-controls{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}.lab-controls>div{min-width:0}.lab-controls .check{font-size:14px}.lab-controls .small{font-size:12px}.lab-story{margin-top:18px}
-@media(min-width:1500px){main{padding-top:52px}}@media(max-width:850px){.finder-results{grid-template-columns:1fr}.filter-grid{grid-template-columns:repeat(3,1fr)}.search-request{grid-template-columns:1fr}.results{max-height:none}.columns,.layout{grid-template-columns:1fr}.lab-controls{grid-template-columns:1fr}}@media(max-width:620px){main{padding:22px 18px 32px}h1{letter-spacing:-1px}.controls{grid-template-columns:1fr 1fr;padding:16px}.controls>button{grid-column:1/-1}article{padding:24px}#storyTitle{font-size:29px}#storyText{font-size:19px}#choices,.tools .grid,.filter-grid{grid-template-columns:1fr 1fr}.footer{align-items:flex-start;flex-direction:column}.composer-controls{align-items:stretch;flex-direction:column}.composer-controls label{width:100%}.columns>section,.layout>section{padding:20px}#savedList li{flex-wrap:wrap}#savedList span{flex-basis:100%}}@media(prefers-reduced-motion:reduce){button{transition:none}button:active{transform:none}}
-:root{--accent:#236c51;--tint:#eaf4eb}</style><style id="compact-layout">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Find something for me</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f6f7f5;
+        --ink: #252c36;
+        --muted: #626978;
+        --green: var(--accent);
+        --line: #dce1e5;
+        --white: #fff;
+        --error: #943b36;
+        --accent: #b54332;
+        --tint: #fcebe3;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          18px/1.55 system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 36px 38px 42px;
+      }
+      h1 {
+        font-size: clamp(36px, 4.8vw, 54px);
+        line-height: 1.08;
+        letter-spacing: -1.8px;
+        font-weight: 750;
+        margin: 12px 0 14px;
+      }
+      h2 {
+        font-size: 28px;
+        line-height: 1.2;
+        letter-spacing: -0.6px;
+        margin: 0 0 18px;
+      }
+      h3 {
+        font-size: 20px;
+        line-height: 1.3;
+        margin: 0 0 8px;
+      }
+      p {
+        margin: 10px 0 18px;
+      }
+      .intro {
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 19px;
+        margin-bottom: 26px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 1.8px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0;
+      }
+      .meta,
+      .small {
+        font-size: 14px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .app-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--line);
+        gap: 20px;
+      }
+      .app-top a {
+        font-size: 13px;
+        color: var(--muted);
+        text-decoration: none;
+      }
+      .app-top a:hover {
+        text-decoration: underline;
+      }
+      label {
+        display: block;
+        font-size: 14px;
+        font-weight: 650;
+        color: var(--ink);
+      }
+      select,
+      input,
+      textarea,
+      button {
+        font: inherit;
+      }
+      select,
+      input,
+      textarea {
+        display: block;
+        width: 100%;
+        border: 1px solid #bec7cf;
+        border-radius: 10px;
+        background: var(--white);
+        color: var(--ink);
+        padding: 12px 14px;
+        margin-top: 7px;
+      }
+      select {
+        min-height: 48px;
+      }
+      textarea {
+        font:
+          17px/1.6 system-ui,
+          sans-serif;
+        resize: vertical;
+        min-height: 132px;
+      }
+      button {
+        border: 1px solid var(--accent);
+        background: var(--accent);
+        color: #fff;
+        border-radius: 10px;
+        padding: 11px 18px;
+        font-size: 16px;
+        font-weight: 650;
+        line-height: 1.5;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          transform 0.15s;
+      }
+      button:hover {
+        filter: brightness(0.96);
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      button:disabled,
+      button[aria-disabled="true"] {
+        opacity: 0.48;
+        cursor: default;
+      }
+      .secondary,
+      .choice {
+        background: white;
+        color: var(--ink);
+        border-color: #bec7cf;
+      }
+      .quiet {
+        background: transparent;
+        border-color: transparent;
+        color: var(--accent);
+        padding: 8px 4px;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .field {
+        margin: 20px 0;
+      }
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 16px;
+        align-items: end;
+        padding: 20px;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        margin: 24px 0 12px;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible,
+      a:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 4px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      #toolsToggle {
+        display: none !important;
+      }
+      #status {
+        min-height: 28px;
+        font-size: 15px;
+        color: var(--muted);
+        margin: 16px 0 10px;
+      }
+      #status[data-state="error"],
+      #unsupported {
+        color: var(--error);
+      }
+      #origin {
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--muted);
+      }
+      #origin:empty,
+      #modeNotice:empty,
+      #context:empty {
+        display: none;
+      }
+      article {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 30px 36px;
+        margin: 18px 0 22px;
+        box-shadow: 0 8px 25px #29344206;
+      }
+      #storyTitle {
+        font-family: Georgia, serif;
+        font-size: 34px;
+        font-weight: 500;
+        letter-spacing: -0.7px;
+        margin-top: 10px;
+      }
+      #storyText {
+        font-family: Georgia, serif;
+        font-size: 21px;
+        line-height: 1.7;
+        white-space: pre-line;
+        min-height: 96px;
+        max-width: 900px;
+      }
+      #sceneCount {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      #choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .choice {
+        text-align: left;
+        min-height: 62px;
+        padding: 15px 18px;
+        border-color: #d2d8df;
+        border-radius: 12px;
+        background: var(--tint);
+        font-weight: 600;
+      }
+      .choice:hover {
+        border-color: var(--accent);
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .end {
+        color: var(--accent);
+      }
+      details {
+        margin: 18px 0;
+      }
+      summary {
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 650;
+        color: var(--accent);
+      }
+      pre {
+        font:
+          14px/1.5 ui-monospace,
+          monospace;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        padding: 18px;
+        background: #f1f3f5;
+        border-radius: 10px;
+        max-height: 360px;
+        overflow: auto;
+      }
+      .tools {
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 22px;
+        margin: 24px 0;
+        font-size: 16px;
+      }
+      .tools .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin: 16px 0;
+      }
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        margin: 16px 0;
+      }
+      .check input {
+        width: 18px;
+        min-height: 18px;
+        margin: 0;
+        accent-color: var(--accent);
+      }
+      #busy {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #trace {
+        max-height: 220px;
+        overflow: auto;
+        font-size: 14px;
+      }
+      #savedList {
+        list-style: none;
+        padding: 0;
+      }
+      #savedList li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      #savedList span {
+        flex: 1;
+      }
+      a {
+        color: var(--accent);
+      }
+      nav {
+        margin-top: 24px;
+        font-size: 14px;
+      }
+      .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin: 18px 0;
+      }
+      .finder-results {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .catalog-column h2 {
+        font-size: 23px;
+        margin-bottom: 16px;
+      }
+      .results {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+        max-height: 465px;
+        overflow: auto;
+        padding-right: 6px;
+      }
+      .results li {
+        padding: 20px;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+      .results li.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px var(--tint);
+      }
+      .results p {
+        margin: 6px 0;
+      }
+      .result-meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin: 12px 0 8px;
+      }
+      .result-meta span {
+        background: var(--tint);
+        color: var(--accent);
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 650;
+      }
+      .map-panel {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+      }
+      .map-heading {
+        padding: 18px 20px 8px;
+      }
+      .map-heading h2 {
+        font-size: 21px;
+        margin: 0;
+      }
+      .map-heading p {
+        font-size: 13px;
+        margin: 8px 0;
+        color: var(--muted);
+      }
+      arcgis-map {
+        display: block;
+        width: 100%;
+        height: 410px;
+        background: #edf2ed;
+      }
+      .map-footer {
+        min-height: 42px;
+        padding: 11px 18px;
+        margin: 0;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      #mapSelection {
+        font-size: 13px;
+        color: var(--accent);
+        margin: 0 0 8px;
+        min-height: 20px;
+      }
+      #query {
+        min-height: 90px;
+      }
+      .search-request {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: end;
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 20px;
+      }
+      .search-request .field {
+        margin: 0;
+      }
+      .search-request .actions {
+        padding-bottom: 2px;
+      }
+      .scope {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 16px 0;
+      }
+      .columns,
+      .layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      .columns > section,
+      .layout > section,
+      .composer {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 24px;
+      }
+      .columns {
+        margin-top: 24px;
+      }
+      .columns h2,
+      .layout h2 {
+        font-size: 23px;
+      }
+      .columns label {
+        margin-bottom: 15px;
+      }
+      #headline {
+        margin-bottom: 12px;
+      }
+      #draft {
+        min-height: 244px;
+      }
+      #original {
+        min-height: 105px;
+      }
+      .composer {
+        margin-top: 24px;
+      }
+      .composer .field {
+        margin: 0;
+      }
+      .composer-controls {
+        display: flex;
+        gap: 16px;
+        align-items: end;
+        margin-top: 16px;
+      }
+      .composer-controls label {
+        width: 210px;
+      }
+      .composer-controls .actions {
+        padding-bottom: 1px;
+      }
+      .guess {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--accent);
+        min-height: 36px;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: white;
+        border: 1px solid #cbd5df;
+        border-radius: 12px;
+        touch-action: none;
+        cursor: crosshair;
+      }
+      #kept {
+        border-top: 1px solid var(--line);
+        margin-top: 24px;
+        padding-top: 20px;
+      }
+      #keptImage {
+        width: 140px;
+        height: 100px;
+        object-fit: contain;
+        background: white;
+        float: left;
+        margin-right: 16px;
+      }
+      #kept:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      .layout .actions {
+        margin: 16px 0;
+      }
+      .layout textarea {
+        min-height: 142px;
+      }
+      .lab-panel {
+        margin: 18px 0;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 22px;
+      }
+      .lab-panel summary {
+        font-size: 16px;
+      }
+      .lab-panel .grid {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .lab-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .lab-controls > div {
+        min-width: 0;
+      }
+      .lab-controls .check {
+        font-size: 14px;
+      }
+      .lab-controls .small {
+        font-size: 12px;
+      }
+      .lab-story {
+        margin-top: 18px;
+      }
+      @media (min-width: 1500px) {
+        main {
+          padding-top: 52px;
+        }
+      }
+      @media (max-width: 850px) {
+        .finder-results {
+          grid-template-columns: 1fr;
+        }
+        .filter-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .search-request {
+          grid-template-columns: 1fr;
+        }
+        .results {
+          max-height: none;
+        }
+        .columns,
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .lab-controls {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        main {
+          padding: 22px 18px 32px;
+        }
+        h1 {
+          letter-spacing: -1px;
+        }
+        .controls {
+          grid-template-columns: 1fr 1fr;
+          padding: 16px;
+        }
+        .controls > button {
+          grid-column: 1/-1;
+        }
+        article {
+          padding: 24px;
+        }
+        #storyTitle {
+          font-size: 29px;
+        }
+        #storyText {
+          font-size: 19px;
+        }
+        #choices,
+        .tools .grid,
+        .filter-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .composer-controls {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        .composer-controls label {
+          width: 100%;
+        }
+        .columns > section,
+        .layout > section {
+          padding: 20px;
+        }
+        #savedList li {
+          flex-wrap: wrap;
+        }
+        #savedList span {
+          flex-basis: 100%;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        button {
+          transition: none;
+        }
+        button:active {
+          transform: none;
+        }
+      }
+      :root {
+        --accent: #236c51;
+        --tint: #eaf4eb;
+      }
+    </style>
+    <style id="compact-layout">
+      /* Compact presentation spacing. Content, controls and scripts are unchanged. */
+      main {
+        padding: 18px 26px 22px;
+      }
+      .app-top {
+        padding-bottom: 7px;
+      }
+      h1 {
+        font-size: 36px;
+        line-height: 1.1;
+        letter-spacing: -1px;
+        margin: 9px 0 9px;
+      }
+      h2 {
+        font-size: 24px;
+        margin-bottom: 12px;
+      }
+      h3 {
+        font-size: 19px;
+        margin-bottom: 6px;
+      }
+      p {
+        margin: 6px 0 10px;
+      }
+      p:empty {
+        margin: 0;
+      }
+      .eyebrow {
+        margin: 0;
+      }
+      .intro {
+        font-size: 18px;
+        margin-bottom: 14px;
+      }
+      button {
+        padding: 8px 14px;
+      }
+      select,
+      input,
+      textarea {
+        padding: 8px 12px;
+        margin-top: 5px;
+      }
+      select {
+        min-height: 40px;
+      }
+      textarea {
+        min-height: 100px;
+      }
+      .field {
+        margin: 12px 0;
+      }
+      .controls {
+        padding: 12px 16px;
+        margin: 14px 0 8px;
+        gap: 14px;
+      }
+      #status {
+        min-height: 22px;
+        margin: 8px 0 6px;
+      }
+      #origin {
+        margin: 4px 0 8px;
+      }
+      .small,
+      .meta {
+        line-height: 1.4;
+      }
+      article {
+        padding: 18px 22px;
+        margin: 12px 0;
+      }
+      #storyTitle {
+        font-size: 29px;
+        margin-top: 7px;
+        margin-bottom: 10px;
+      }
+      #storyText {
+        font-size: 20px;
+        line-height: 1.45;
+        min-height: 56px;
+        margin: 8px 0 12px;
+      }
+      #choices {
+        gap: 10px;
+        margin: 14px 0;
+      }
+      .choice {
+        min-height: 48px;
+        padding: 10px 14px;
+      }
+      .footer {
+        padding-top: 10px;
+        gap: 12px;
+      }
+      details {
+        margin: 10px 0;
+      }
+      .quiet {
+        padding: 6px 4px;
+      }
+      .tools {
+        padding: 16px;
+        margin: 14px 0;
+      }
+      .tools .grid {
+        margin: 10px 0;
+      }
+      #savedList li {
+        padding: 8px 0;
+      }
+      .columns,
+      .layout {
+        gap: 18px;
+      }
+      .columns {
+        margin-top: 12px;
+      }
+      .columns > section,
+      .layout > section,
+      .composer {
+        padding: 16px 18px;
+      }
+      .columns h2,
+      .layout h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+      .columns label {
+        margin-bottom: 10px;
+      }
+      .composer {
+        margin-top: 14px;
+      }
+      .composer-controls {
+        margin-top: 10px;
+      }
+      .layout .actions {
+        margin: 10px 0;
+      }
+      #headline {
+        margin-bottom: 8px;
+      }
+      #kept {
+        margin-top: 16px;
+        padding-top: 14px;
+      }
+      .guess {
+        font-size: 25px;
+        min-height: 30px;
+      }
+      @media (min-width: 1500px) {
+        main {
+          padding-top: 22px;
+        }
+      }
+      @media (max-width: 620px) {
+        main {
+          padding: 16px 18px 22px;
+        }
+        h1 {
+          font-size: 32px;
+        }
+        article {
+          padding: 16px 18px;
+        }
+        .controls {
+          padding: 12px;
+        }
+        .columns > section,
+        .layout > section {
+          padding: 16px;
+        }
+      }
+      #query {
+        min-height: 58px;
+        height: 58px;
+      }
+      .search-request {
+        padding: 12px 16px;
+        gap: 14px;
+      }
+      .filter-grid {
+        margin: 10px 0;
+        gap: 10px;
+      }
+      #acceptedQuery {
+        margin: 5px 0 7px;
+      }
+      #explanation,
+      #unsupported {
+        font-size: 15px;
+        line-height: 1.4;
+        margin: 5px 0 8px;
+      }
+      .finder-results {
+        gap: 18px;
+        margin-top: 12px;
+      }
+      .catalog-column h2 {
+        font-size: 21px;
+        margin-bottom: 10px;
+      }
+      .results {
+        max-height: 300px;
+        gap: 10px;
+      }
+      .results li {
+        padding: 12px 16px;
+      }
+      .results p {
+        margin: 4px 0;
+      }
+      .result-meta {
+        margin: 7px 0 5px;
+      }
+      .map-heading {
+        padding: 12px 16px 5px;
+      }
+      .map-heading h2 {
+        font-size: 19px;
+      }
+      .map-heading p {
+        margin: 5px 0;
+      }
+      #mapSelection {
+        min-height: 18px;
+        margin: 0 0 5px;
+      }
+      arcgis-map {
+        height: clamp(190px, 32vh, 280px);
+      }
+      .map-footer {
+        min-height: 30px;
+        padding: 7px 14px;
+      }
+      .scope {
+        margin: 10px 0;
+        font-size: 12px;
+      }
+      @media (max-width: 850px) {
+        .results {
+          max-height: none;
+        }
+      }
+    </style>
+  </head>
+  <body data-kind="search">
+    <main>
+      <div class="app-top">
+        <p class="eyebrow">Activity finder</p>
+        <a href="index.html">All demos</a>
+      </div>
+      <h1>Find your kind of afternoon.</h1>
+      <p class="intro">
+        A quiet corner? A little adventure? Tell us what sounds good, then
+        explore the matches.
+      </p>
+      <section class="search-request">
+        <label class="field"
+          >What would you like to do?<textarea id="query" maxlength="500">
+Something quiet and free for a rainy afternoon.</textarea
+          >
+        </label>
+        <div class="actions">
+          <button id="generate">Find activities</button
+          ><button id="stop" class="secondary" hidden>Stop request</button
+          ><button id="retry" class="secondary" hidden>Try again</button>
+        </div>
+      </section>
+      <p id="status" role="status" aria-live="polite" aria-atomic="true">
+        Ready when you are.
+      </p>
+      <p id="origin" class="small">No AI response yet.</p>
+      <details open>
+        <summary>Filters you can change</summary>
+        <div class="filter-grid">
+          <label
+            >Environment<select id="environment">
+              <option value="any">Any</option>
+              <option value="indoor">Indoor</option>
+              <option value="outdoor">Outdoor</option>
+            </select></label
+          ><label
+            >Energy<select id="energy">
+              <option value="any">Any</option>
+              <option value="calm">Calm</option>
+              <option value="lively">Lively</option>
+            </select></label
+          ><label
+            >Budget<select id="budget">
+              <option value="any">Any</option>
+              <option value="free">Free</option>
+              <option value="paid">Paid</option>
+            </select></label
+          ><label
+            >Duration<select id="duration">
+              <option value="any">Any</option>
+              <option value="short">Short</option>
+              <option value="long">Long</option>
+            </select></label
+          ><label
+            >Category<select id="category">
+              <option value="any">Any</option>
+              <option value="arts">Arts</option>
+              <option value="games">Games</option>
+              <option value="food">Food</option>
+              <option value="nature">Nature</option>
+              <option value="learn">Learn</option>
+            </select></label
+          >
+        </div>
+      </details>
+      <p id="acceptedQuery" class="small">
+        Manual catalog browsing is available immediately.
+      </p>
+      <p id="explanation"></p>
+      <p id="unsupported"></p>
+      <div class="finder-results">
+        <section class="catalog-column" aria-labelledby="count">
+          <h2 id="count"></h2>
+          <ul id="matches" class="results"></ul>
+        </section>
+        <section class="map-panel" aria-labelledby="mapTitle">
+          <div class="map-heading">
+            <h2 id="mapTitle">An afternoon on the map</h2>
+            <p>Sample locations around Washington, DC</p>
+            <p id="mapSelection" aria-live="polite">
+              Select an activity to find its pin.
+            </p>
+          </div>
+          <arcgis-map
+            id="activityMap"
+            center="-77.03,38.903"
+            zoom="14"
+            aria-label="Map of fictional activity locations in Washington DC"
+            ><arcgis-zoom slot="top-left"></arcgis-zoom
+          ></arcgis-map>
+          <p id="mapStatus" class="map-footer" role="status">
+            Loading the map. You can browse activities while it loads.
+          </p>
+        </section>
+      </div>
+      <p class="scope">
+        Demo catalog with illustrative locations. No live events, opening hours,
+        weather, or distance from you.
+      </p>
+      <button
+        class="quiet"
+        id="toolsToggle"
+        aria-expanded="false"
+        aria-controls="tools"
+        hidden
+      >
+        Presenter tools
+      </button>
+      <section id="tools" class="tools" hidden>
+        <label
+          >Response source<select id="source">
+            <option value="ai">Real AI</option>
+            <option value="sample">Prepared sample / no AI call</option>
+          </select></label
+        >
+        <p class="small">
+          The sample is fixed. It does not interpret your current input.
+        </p>
+        <button id="sample" class="secondary">Load prepared sample</button>
+        <details>
+          <summary>Accepted response JSON</summary>
+          <pre id="raw">No response yet.</pre>
+        </details>
+      </section>
+    </main>
+    <script>
+      // Shared verbatim between each standalone HTML and the local server.
+      function exact(value, keys) {
+        if (
+          !value ||
+          typeof value !== "object" ||
+          Array.isArray(value) ||
+          Object.keys(value).length !== keys.length ||
+          keys.some((k) => !Object.hasOwn(value, k))
+        )
+          throw new Error("The response fields do not match the contract.");
+      }
+      function boundedText(value, max, label) {
+        if (typeof value !== "string" || !value.trim() || value.length > max)
+          throw new Error(
+            `${label} must be nonempty text up to ${max} characters.`,
+          );
+      }
+      function validateScene(scene, turn) {
+        exact(scene, ["title", "text", "choices", "ending"]);
+        boundedText(scene.title, 80, "Title");
+        boundedText(scene.text, 900, "Scene");
+        if (typeof scene.ending !== "boolean" || scene.ending !== (turn === 3))
+          throw new Error(
+            "The ending flag does not match the app-owned scene count.",
+          );
+        if (
+          !Array.isArray(scene.choices) ||
+          scene.choices.length !== (turn === 3 ? 0 : 2)
+        )
+          throw new Error(
+            "An active scene needs two choices. The ending needs none.",
+          );
+        for (const [i, choice] of scene.choices.entries()) {
+          exact(choice, ["id", "label"]);
+          if (choice.id !== (i === 0 ? "a" : "b"))
+            throw new Error("Choice IDs must be a then b.");
+          boundedText(choice.label, 70, "Choice label");
+        }
+        if (
+          scene.choices.length === 2 &&
+          scene.choices[0].label.trim().toLowerCase() ===
+            scene.choices[1].label.trim().toLowerCase()
+        )
+          throw new Error("The two choices need different labels.");
+        return scene;
+      }
+      function validateInput(input) {
+        exact(input, ["setting", "tone", "history"]);
+        if (
+          !["library", "station", "garden"].includes(input.setting) ||
+          !["mysterious", "silly"].includes(input.tone)
+        )
+          throw new Error("Choose an available setting and tone.");
+        if (!Array.isArray(input.history) || input.history.length > 2)
+          throw new Error("This adventure has at most three scenes.");
+        for (const [i, row] of input.history.entries()) {
+          exact(row, ["scene", "chosenId"]);
+          validateScene(row.scene, i + 1);
+          if (!row.scene.choices.some((c) => c.id === row.chosenId))
+            throw new Error("Choose an action from the accepted scene.");
+        }
+        return input;
+      }
 
-/* Compact presentation spacing. Content, controls and scripts are unchanged. */
-main{padding:18px 26px 22px}
-.app-top{padding-bottom:7px}
-h1{font-size:36px;line-height:1.1;letter-spacing:-1px;margin:9px 0 9px}
-h2{font-size:24px;margin-bottom:12px}
-h3{font-size:19px;margin-bottom:6px}
-p{margin:6px 0 10px}
-p:empty{margin:0}
-.eyebrow{margin:0}
-.intro{font-size:18px;margin-bottom:14px}
-button{padding:8px 14px}
-select,input,textarea{padding:8px 12px;margin-top:5px}
-select{min-height:40px}
-textarea{min-height:100px}
-.field{margin:12px 0}
-.controls{padding:12px 16px;margin:14px 0 8px;gap:14px}
-#status{min-height:22px;margin:8px 0 6px}
-#origin{margin:4px 0 8px}
-.small,.meta{line-height:1.4}
-article{padding:18px 22px;margin:12px 0}
-#storyTitle{font-size:29px;margin-top:7px;margin-bottom:10px}
-#storyText{font-size:20px;line-height:1.45;min-height:56px;margin:8px 0 12px}
-#choices{gap:10px;margin:14px 0}
-.choice{min-height:48px;padding:10px 14px}
-.footer{padding-top:10px;gap:12px}
-details{margin:10px 0}
-.quiet{padding:6px 4px}
-.tools{padding:16px;margin:14px 0}
-.tools .grid{margin:10px 0}
-#savedList li{padding:8px 0}
-.columns,.layout{gap:18px}
-.columns{margin-top:12px}
-.columns>section,.layout>section,.composer{padding:16px 18px}
-.columns h2,.layout h2{font-size:22px;margin-bottom:10px}
-.columns label{margin-bottom:10px}
-.composer{margin-top:14px}
-.composer-controls{margin-top:10px}
-.layout .actions{margin:10px 0}
-#headline{margin-bottom:8px}
-#kept{margin-top:16px;padding-top:14px}
-.guess{font-size:25px;min-height:30px}
-@media(min-width:1500px){main{padding-top:22px}}
-@media(max-width:620px){main{padding:16px 18px 22px}h1{font-size:32px}article{padding:16px 18px}.controls{padding:12px}.columns>section,.layout>section{padding:16px}}
-#query{min-height:58px;height:58px}
-.search-request{padding:12px 16px;gap:14px}
-.filter-grid{margin:10px 0;gap:10px}
-#acceptedQuery{margin:5px 0 7px}
-#explanation,#unsupported{font-size:15px;line-height:1.4;margin:5px 0 8px}
-.finder-results{gap:18px;margin-top:12px}
-.catalog-column h2{font-size:21px;margin-bottom:10px}
-.results{max-height:300px;gap:10px}
-.results li{padding:12px 16px}
-.results p{margin:4px 0}
-.result-meta{margin:7px 0 5px}
-.map-heading{padding:12px 16px 5px}
-.map-heading h2{font-size:19px}
-.map-heading p{margin:5px 0}
-#mapSelection{min-height:18px;margin:0 0 5px}
-arcgis-map{height:clamp(190px,32vh,280px)}
-.map-footer{min-height:30px;padding:7px 14px}
-.scope{margin:10px 0;font-size:12px}
-@media(max-width:850px){.results{max-height:none}}
-</style></head><body data-kind="search"><main><div class="app-top"><p class="eyebrow">Activity finder</p><a href="index.html">All demos</a></div><h1>Find your kind of afternoon.</h1><p class="intro">A quiet corner? A little adventure? Tell us what sounds good, then explore the matches.</p><section class="search-request"><label class="field">What would you like to do?<textarea id="query" maxlength="500">Something quiet and free for a rainy afternoon.</textarea></label><div class="actions"><button id="generate">Find activities</button><button id="stop" class="secondary" hidden>Stop request</button><button id="retry" class="secondary" hidden>Try again</button></div></section><p id="status" role="status" aria-live="polite" aria-atomic="true">Ready when you are.</p><p id="origin" class="small">No AI response yet.</p><details open><summary>Filters you can change</summary><div class="filter-grid"><label>Environment<select id="environment"><option value="any">Any</option><option value="indoor">Indoor</option><option value="outdoor">Outdoor</option></select></label><label>Energy<select id="energy"><option value="any">Any</option><option value="calm">Calm</option><option value="lively">Lively</option></select></label><label>Budget<select id="budget"><option value="any">Any</option><option value="free">Free</option><option value="paid">Paid</option></select></label><label>Duration<select id="duration"><option value="any">Any</option><option value="short">Short</option><option value="long">Long</option></select></label><label>Category<select id="category"><option value="any">Any</option><option value="arts">Arts</option><option value="games">Games</option><option value="food">Food</option><option value="nature">Nature</option><option value="learn">Learn</option></select></label></div></details><p id="acceptedQuery" class="small">Manual catalog browsing is available immediately.</p><p id="explanation"></p><p id="unsupported"></p><div class="finder-results"><section class="catalog-column" aria-labelledby="count"><h2 id="count"></h2><ul id="matches" class="results"></ul></section><section class="map-panel" aria-labelledby="mapTitle"><div class="map-heading"><h2 id="mapTitle">An afternoon on the map</h2><p>Sample locations around Washington, DC</p><p id="mapSelection" aria-live="polite">Select an activity to find its pin.</p></div><arcgis-map id="activityMap" center="-77.03,38.903" zoom="14" aria-label="Map of fictional activity locations in Washington DC"><arcgis-zoom slot="top-left"></arcgis-zoom></arcgis-map><p id="mapStatus" class="map-footer" role="status">Loading the map. You can browse activities while it loads.</p></section></div><p class="scope">Demo catalog with illustrative locations. No live events, opening hours, weather, or distance from you.</p><button class="quiet" id="toolsToggle" aria-expanded="false" aria-controls="tools" hidden>Presenter tools</button><section id="tools" class="tools" hidden><label>Response source<select id="source"><option value="ai">Real AI</option><option value="sample">Prepared sample / no AI call</option></select></label><p class="small">The sample is fixed. It does not interpret your current input.</p><button id="sample" class="secondary">Load prepared sample</button><details><summary>Accepted response JSON</summary><pre id="raw">No response yet.</pre></details></section></main><script>// Shared verbatim between each standalone HTML and the local server.
-function exact(value,keys){
- if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==keys.length||keys.some(k=>!Object.hasOwn(value,k)))throw new Error('The response fields do not match the contract.');
-}
-function boundedText(value,max,label){if(typeof value!=='string'||!value.trim()||value.length>max)throw new Error(`${label} must be nonempty text up to ${max} characters.`);}
-function validateScene(scene,turn){
- exact(scene,['title','text','choices','ending']);boundedText(scene.title,80,'Title');boundedText(scene.text,900,'Scene');
- if(typeof scene.ending!=='boolean'||scene.ending!==(turn===3))throw new Error('The ending flag does not match the app-owned scene count.');
- if(!Array.isArray(scene.choices)||scene.choices.length!==(turn===3?0:2))throw new Error('An active scene needs two choices. The ending needs none.');
- for(const [i,choice] of scene.choices.entries()){
-  exact(choice,['id','label']);if(choice.id!==(i===0?'a':'b'))throw new Error('Choice IDs must be a then b.');boundedText(choice.label,70,'Choice label');
- }
- if(scene.choices.length===2&&scene.choices[0].label.trim().toLowerCase()===scene.choices[1].label.trim().toLowerCase())throw new Error('The two choices need different labels.');
- return scene;
-}
-function validateInput(input){
- exact(input,['setting','tone','history']);
- if(!['library','station','garden'].includes(input.setting)||!['mysterious','silly'].includes(input.tone))throw new Error('Choose an available setting and tone.');
- if(!Array.isArray(input.history)||input.history.length>2)throw new Error('This adventure has at most three scenes.');
- for(const [i,row]of input.history.entries()){
-  exact(row,['scene','chosenId']);validateScene(row.scene,i+1);
-  if(!row.scene.choices.some(c=>c.id===row.chosenId))throw new Error('Choose an action from the accepted scene.');
- }
- return input;
-}
+      // Shared verbatim by the server and standalone browser demos.
+      const FILTERS = {
+        environment: ["any", "indoor", "outdoor"],
+        energy: ["any", "calm", "lively"],
+        budget: ["any", "free", "paid"],
+        duration: ["any", "short", "long"],
+        category: ["any", "arts", "games", "food", "nature", "learn"],
+      };
+      const ACTIVITIES = [
+        {
+          id: "reading",
+          name: "Quiet reading corner",
+          description: "Settle into a book in a quiet room.",
+          environment: "indoor",
+          energy: "calm",
+          budget: "free",
+          duration: "short",
+          category: "learn",
+        },
+        {
+          id: "sketch",
+          name: "Sketch a tiny monster",
+          description: "Paper, pencils, and a friendly drawing prompt.",
+          environment: "indoor",
+          energy: "calm",
+          budget: "free",
+          duration: "short",
+          category: "arts",
+        },
+        {
+          id: "puzzle",
+          name: "Puzzle table",
+          description: "Work together on a tabletop jigsaw.",
+          environment: "indoor",
+          energy: "calm",
+          budget: "free",
+          duration: "long",
+          category: "games",
+        },
+        {
+          id: "arcade",
+          name: "Arcade challenge",
+          description: "A noisy, fast-paced game session.",
+          environment: "indoor",
+          energy: "lively",
+          budget: "paid",
+          duration: "short",
+          category: "games",
+        },
+        {
+          id: "walk",
+          name: "Garden stroll",
+          description: "A relaxed walk among plants.",
+          environment: "outdoor",
+          energy: "calm",
+          budget: "free",
+          duration: "short",
+          category: "nature",
+        },
+        {
+          id: "trail",
+          name: "Trail adventure",
+          description: "An energetic afternoon outdoors.",
+          environment: "outdoor",
+          energy: "lively",
+          budget: "free",
+          duration: "long",
+          category: "nature",
+        },
+        {
+          id: "coffee",
+          name: "Coffee and conversation",
+          description: "A low-key cafe meetup.",
+          environment: "indoor",
+          energy: "calm",
+          budget: "paid",
+          duration: "short",
+          category: "food",
+        },
+        {
+          id: "cooking",
+          name: "Cooking together",
+          description: "A lively hands-on cooking session.",
+          environment: "indoor",
+          energy: "lively",
+          budget: "paid",
+          duration: "long",
+          category: "food",
+        },
+        {
+          id: "craft",
+          name: "Craft afternoon",
+          description: "Spend an afternoon making something small.",
+          environment: "indoor",
+          energy: "calm",
+          budget: "paid",
+          duration: "long",
+          category: "arts",
+        },
+        {
+          id: "quiz",
+          name: "Team trivia",
+          description: "A lively general-knowledge game.",
+          environment: "indoor",
+          energy: "lively",
+          budget: "free",
+          duration: "long",
+          category: "learn",
+        },
+      ];
+      function validateSearchInput(input) {
+        exact(input, ["query"]);
+        boundedText(input.query, 500, "Request");
+        return input;
+      }
+      function validateSearch(value) {
+        exact(value, ["filters", "explanation", "unsupported"]);
+        exact(value.filters, Object.keys(FILTERS));
+        for (const key of Object.keys(FILTERS))
+          if (!FILTERS[key].includes(value.filters[key]))
+            throw new Error("Unknown filter value.");
+        boundedText(value.explanation, 400, "Explanation");
+        if (!Array.isArray(value.unsupported) || value.unsupported.length > 5)
+          throw new Error("Unsupported requests must be a short list.");
+        for (const item of value.unsupported)
+          boundedText(item, 100, "Unsupported request");
+        return value;
+      }
+      function matchingActivities(filters) {
+        return ACTIVITIES.filter((item) =>
+          Object.keys(FILTERS).every(
+            (key) => filters[key] === "any" || filters[key] === item[key],
+          ),
+        );
+      }
+      function validateRewriteInput(input) {
+        exact(input, ["message", "tone"]);
+        boundedText(input.message, 1500, "Original message");
+        if (!["friendly", "playful", "concise"].includes(input.tone))
+          throw new Error("Unknown tone.");
+        return input;
+      }
+      function validateRewrite(value) {
+        exact(value, ["headline", "body"]);
+        boundedText(value.headline, 80, "Headline");
+        boundedText(value.body, 1000, "Body");
+        return value;
+      }
+      const SEARCH_SAMPLE = {
+        filters: {
+          environment: "indoor",
+          energy: "calm",
+          budget: "free",
+          duration: "any",
+          category: "any",
+        },
+        explanation:
+          "The sample interprets a rainy, quiet, free afternoon as indoors, calm, and free.",
+        unsupported: [],
+      };
+      const REWRITE_SAMPLE = {
+        headline: "A little break from the conference",
+        body: "Come hang out, chat about what you learned, and enjoy a relaxed break together. Everyone is welcome!",
+      };
 
-// Shared verbatim by the server and standalone browser demos.
-const FILTERS={environment:['any','indoor','outdoor'],energy:['any','calm','lively'],budget:['any','free','paid'],duration:['any','short','long'],category:['any','arts','games','food','nature','learn']};
-const ACTIVITIES=[
- {id:'reading',name:'Quiet reading corner',description:'Settle into a book in a quiet room.',environment:'indoor',energy:'calm',budget:'free',duration:'short',category:'learn'},
- {id:'sketch',name:'Sketch a tiny monster',description:'Paper, pencils, and a friendly drawing prompt.',environment:'indoor',energy:'calm',budget:'free',duration:'short',category:'arts'},
- {id:'puzzle',name:'Puzzle table',description:'Work together on a tabletop jigsaw.',environment:'indoor',energy:'calm',budget:'free',duration:'long',category:'games'},
- {id:'arcade',name:'Arcade challenge',description:'A noisy, fast-paced game session.',environment:'indoor',energy:'lively',budget:'paid',duration:'short',category:'games'},
- {id:'walk',name:'Garden stroll',description:'A relaxed walk among plants.',environment:'outdoor',energy:'calm',budget:'free',duration:'short',category:'nature'},
- {id:'trail',name:'Trail adventure',description:'An energetic afternoon outdoors.',environment:'outdoor',energy:'lively',budget:'free',duration:'long',category:'nature'},
- {id:'coffee',name:'Coffee and conversation',description:'A low-key cafe meetup.',environment:'indoor',energy:'calm',budget:'paid',duration:'short',category:'food'},
- {id:'cooking',name:'Cooking together',description:'A lively hands-on cooking session.',environment:'indoor',energy:'lively',budget:'paid',duration:'long',category:'food'},
- {id:'craft',name:'Craft afternoon',description:'Spend an afternoon making something small.',environment:'indoor',energy:'calm',budget:'paid',duration:'long',category:'arts'},
- {id:'quiz',name:'Team trivia',description:'A lively general-knowledge game.',environment:'indoor',energy:'lively',budget:'free',duration:'long',category:'learn'}
-];
-function validateSearchInput(input){exact(input,['query']);boundedText(input.query,500,'Request');return input;}
-function validateSearch(value){
- exact(value,['filters','explanation','unsupported']);exact(value.filters,Object.keys(FILTERS));
- for(const key of Object.keys(FILTERS))if(!FILTERS[key].includes(value.filters[key]))throw new Error('Unknown filter value.');
- boundedText(value.explanation,400,'Explanation');if(!Array.isArray(value.unsupported)||value.unsupported.length>5)throw new Error('Unsupported requests must be a short list.');
- for(const item of value.unsupported)boundedText(item,100,'Unsupported request');return value;
-}
-function matchingActivities(filters){return ACTIVITIES.filter(item=>Object.keys(FILTERS).every(key=>filters[key]==='any'||filters[key]===item[key]));}
-function validateRewriteInput(input){exact(input,['message','tone']);boundedText(input.message,1500,'Original message');if(!['friendly','playful','concise'].includes(input.tone))throw new Error('Unknown tone.');return input;}
-function validateRewrite(value){exact(value,['headline','body']);boundedText(value.headline,80,'Headline');boundedText(value.body,1000,'Body');return value;}
-const SEARCH_SAMPLE={filters:{environment:'indoor',energy:'calm',budget:'free',duration:'any',category:'any'},explanation:'The sample interprets a rainy, quiet, free afternoon as indoors, calm, and free.',unsupported:[]};
-const REWRITE_SAMPLE={headline:'A little break from the conference',body:'Come hang out, chat about what you learned, and enjoy a relaxed break together. Everyone is welcome!'};
-
-const $=id=>document.getElementById(id);
-const kind=document.body.dataset.kind;
-let version=0,controller=null,accepted=null,failed=null,undoDraft=null;
-function status(message){$('status').textContent=message;}
-function currentInput(){return kind==='search'?{query:$('query').value.trim()}:{message:$('original').value.trim(),tone:$('tone').value};}
-function invalidate(){version++;controller?.abort();controller=null;$('stop').hidden=true;failed=null;$('retry').hidden=true;if(kind==='rewrite')$('apply').disabled=true;status('Input changed. Request a new suggestion when you are ready.');}
-function source(){return $('source').value;}
-function validate(value){return kind==='search'?validateSearch(value):validateRewrite(value);}
-function showResult(payload,input){
- accepted={value:structuredClone(payload.result),input:structuredClone(input),origin:payload.origin};
- $('origin').textContent=payload.origin;
- $('raw').textContent=JSON.stringify(payload.result,null,2);
- if(kind==='search'){
-  for(const key of Object.keys(FILTERS))$(key).value=payload.result.filters[key];
-  $('explanation').textContent=payload.result.explanation;
-  $('unsupported').textContent=payload.result.unsupported.length?'This catalog cannot check: '+payload.result.unsupported.join(', '):'';
-  $('acceptedQuery').textContent='Interpreted request: '+input.query;
-  renderMatches();
- }else{
-  $('headline').value=payload.result.headline;$('suggestion').value=payload.result.body;
-  $('suggestionContext').textContent='Suggestion for '+input.tone+' tone. Your current draft stays below.';
-  $('apply').disabled=false;
- }
-}
-function renderMatches(){
- const filters=Object.fromEntries(Object.keys(FILTERS).map(key=>[key,$(key).value]));
- const items=matchingActivities(filters);$('matches').replaceChildren();
- $('count').textContent=items.length+' matching activit'+(items.length===1?'y':'ies');
- globalThis.activityMapItems=structuredClone(items);
- for(const [index,item] of items.entries()){
-  const li=document.createElement('li'),heading=document.createElement('h3'),description=document.createElement('p'),meta=document.createElement('p'),locate=document.createElement('button');
-  li.id='activity-'+item.id;
-  heading.textContent=(index+1)+'. '+item.name;description.textContent=item.description;
-  meta.className='result-meta';for(const value of [item.environment,item.energy,item.budget]){const tag=document.createElement('span');tag.textContent=value;meta.append(tag);}
-  locate.className='quiet';locate.textContent='Show on map';locate.setAttribute('aria-label','Show '+item.name+' on map');
-  locate.addEventListener('click',()=>{
-   if(globalThis.selectActivityOnMap)globalThis.selectActivityOnMap(item.id);
-   else $('mapSelection').textContent=item.name+' / Map is still unavailable. The catalog remains usable.';
-  });
-  li.append(heading,description,meta,locate);$('matches').append(li);
- }
- if(!items.length){const li=document.createElement('li');li.textContent='No catalog activities match all these filters. Change any filter to Any to broaden the results.';$('matches').append(li);}
- if(globalThis.updateActivityMap)globalThis.updateActivityMap(items);
-}
-async function callAI(input,signal,requestId){
- const base=location.protocol==='file:'?'http://127.0.0.1:8787':location.origin;
- const response=await fetch(base+'/api/'+kind,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({input,requestId}),signal});
- let data;try{data=await response.json();}catch{throw new Error('The server returned an unreadable response.');}
- if(!response.ok){const error=new Error(data.error?.message||'The request failed.');error.retryable=data.error?.retryable===true;throw error;}return data;
-}
-async function generate(input=currentInput(),chosenSource=source()){
- if(chosenSource==='sample')input=kind==='search'?{query:'Something quiet, indoors, and free'}:{message:'Come hang out with us and talk about what you learned.',tone:'friendly'};
- try{kind==='search'?validateSearchInput(input):validateRewriteInput(input);}catch(error){status(error.message);return;}
- controller?.abort();const id=++version,work=new AbortController();controller=work;
- failed=null;$('retry').hidden=true;$('stop').hidden=false;
- if(kind==='rewrite')$('apply').disabled=true;
- status(kind==='search'?'Interpreting your request. Existing results remain available.':'Writing a suggestion. Your current draft stays unchanged.');
- let timedOut=false;const timer=setTimeout(()=>{timedOut=true;work.abort();},18000);
- try{
-  const payload=chosenSource==='sample'?{result:structuredClone(kind==='search'?SEARCH_SAMPLE:REWRITE_SAMPLE),origin:'Prepared sample / no AI call'}:await callAI(input,work.signal,crypto.randomUUID());
-  validate(payload.result);if(id!==version||work.signal.aborted)return;
-  showResult(payload,input);status('Ready. Review the result and adjust anything you need.');
- }catch(error){
-  if(id!==version)return;
-  if(work.signal.aborted){status(timedOut?'The request took too long. Existing work remains available.':'Stopped. Existing work remains available.');}
-  else{failed={input:structuredClone(input),source:chosenSource};$('retry').hidden=error.retryable!==true;status(error.message+' Existing work remains available. You can use the manual controls or load a prepared sample.');}
- }finally{clearTimeout(timer);if(id===version){controller=null;$('stop').hidden=true;}}
-}
-$('generate').addEventListener('click',()=>generate());
-$('stop').addEventListener('click',()=>{invalidate();status('Stopped. Existing work remains available.');});
-$('retry').addEventListener('click',()=>{if(failed)generate(failed.input,failed.source);});
-$('sample').addEventListener('click',()=>{const input=kind==='search'?{query:'Something quiet, indoors, and free'}:{message:'Come hang out with us and talk about what you learned.',tone:'friendly'};generate(input,'sample');});
-$('source').addEventListener('change',invalidate);
-$('toolsToggle').addEventListener('click',()=>{$('tools').hidden=!$('tools').hidden;$('toolsToggle').setAttribute('aria-expanded',String(!$('tools').hidden));});
-if(kind==='search'){
- $('query').addEventListener('input',invalidate);
- for(const key of Object.keys(FILTERS))$(key).addEventListener('change',()=>{version++;controller?.abort();controller=null;$('stop').hidden=true;failed=null;$('retry').hidden=true;$('origin').textContent='Manual filters / no new AI call';$('explanation').textContent='You adjusted the filters yourself.';$('unsupported').textContent='';renderMatches();status('Filters updated immediately.');});
- renderMatches();
-}else{
- $('original').addEventListener('input',invalidate);$('tone').addEventListener('change',invalidate);
- $('draft').addEventListener('input',()=>{$('undo').disabled=true;undoDraft=null;});
- $('apply').addEventListener('click',()=>{if($('apply').disabled)return;try{validateRewrite({headline:$('headline').value,body:$('suggestion').value});}catch(error){status(error.message);return;}undoDraft=$('draft').value;$('draft').value=$('headline').value+'\n\n'+$('suggestion').value;$('undo').disabled=false;status('Suggestion added to your draft. You can edit it or undo this change.');$('draft').focus();});
- $('undo').addEventListener('click',()=>{if(undoDraft===null)return;$('draft').value=undoDraft;undoDraft=null;$('undo').disabled=true;status('Your previous draft is restored.');});
- $('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('draft').value);status('Draft copied.');}catch{$('draft').focus();$('draft').select();status('Select and copy the draft with your keyboard.');}});
-}
-</script><script data-backstage>
-// Backstage controls stay out of the audience interface. Alt+P toggles them.
-if (typeof window !== 'undefined') window.addEventListener('keydown', event => {
- if (!event.altKey || event.key.toLowerCase() !== 'p' || event.repeat) return;
- event.preventDefault();
- const panel = document.getElementById('tools');
- panel.hidden = !panel.hidden;
- if (!panel.hidden) { panel.open = true; panel.scrollIntoView({behavior:'instant',block:'nearest'}); }
-});
-</script><script type="module" data-map>
-
-// ArcGIS Maps SDK 5.1. App-owned IDs and coordinates, never coordinates from AI.
-// https://developers.arcgis.com/javascript/latest/sample-code/intro-map-components/
-// https://developers.arcgis.com/javascript/latest/sample-code/intro-graphics/
-// https://developers.arcgis.com/javascript/latest/references/core/layers/OpenStreetMapLayer/
-const LOCATIONS={
- reading:[-77.026,38.900],sketch:[-77.037,38.906],puzzle:[-77.031,38.910],
- arcade:[-77.020,38.906],walk:[-77.041,38.899],trail:[-77.045,38.912],
- coffee:[-77.025,38.910],cooking:[-77.019,38.899],craft:[-77.036,38.914],quiz:[-77.029,38.896]
-};
-const mapElement=document.getElementById('activityMap');
-const mapStatus=document.getElementById('mapStatus');
-let mapReady=false,selectedId=null,mapRevision=0,graphics=[];
-function unavailable(){mapStatus.textContent='Map unavailable. Activity cards and filters still work.';}
-function timed(promise,ms){return new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Map load timeout')),ms);promise.then(v=>{clearTimeout(timer);resolve(v);},e=>{clearTimeout(timer);reject(e);});});}
-try{
- // Dynamic loader reports blocked CDN/network errors without blocking the catalog.
- await timed(new Promise((resolve,reject)=>{
-  const loader=document.createElement('script');loader.type='module';loader.src='https://js.arcgis.com/5.1/';
-  loader.onload=resolve;loader.onerror=()=>reject(new Error('ArcGIS SDK unavailable'));document.head.append(loader);
- }),16000);
- await timed(customElements.whenDefined('arcgis-map'),12000);
- const [Map,Basemap,OpenStreetMapLayer,Graphic]=await timed($arcgis.import([
-  '@arcgis/core/Map.js','@arcgis/core/Basemap.js','@arcgis/core/layers/OpenStreetMapLayer.js','@arcgis/core/Graphic.js'
- ]),12000);
- const basemapLayer=new OpenStreetMapLayer();
- // Public OpenStreetMap tiles keep setup free of a second API key. Keep SDK attribution visible.
- mapElement.map=new Map({basemap:new Basemap({baseLayers:[basemapLayer],title:'OpenStreetMap'})});
- await timed(mapElement.viewOnReady(),16000);
- await timed(basemapLayer.load(),12000);
- mapReady=true;
- function highlight(id){
-  selectedId=id;
-  for(const graphic of graphics){
-   if(graphic.symbol.type!=='simple-marker')continue;
-   graphic.symbol={type:'simple-marker',size:graphic.attributes.id===id?29:23,color:graphic.attributes.id===id?'#a63b28':'#236c51',outline:{color:'#ffffff',width:2}};
-  }
-  for(const item of globalThis.activityMapItems||[])document.getElementById('activity-'+item.id)?.classList.toggle('selected',item.id===id);
-  const item=(globalThis.activityMapItems||[]).find(row=>row.id===id);
-  document.getElementById('mapSelection').textContent=item?item.name+' / illustrative location':'Select an activity to find its pin.';
- }
- globalThis.updateActivityMap=items=>{
-  mapRevision++;selectedId=null;mapElement.graphics.removeAll();graphics=[];
-  for(const [index,item] of items.entries()){
-   const point=LOCATIONS[item.id];if(!point)continue;
-   const geometry={type:'point',longitude:point[0],latitude:point[1]};
-   graphics.push(new Graphic({geometry,attributes:{id:item.id},symbol:{type:'simple-marker',size:23,color:'#236c51',outline:{color:'white',width:2}}}));
-   graphics.push(new Graphic({geometry,attributes:{id:item.id},symbol:{type:'text',text:String(index+1),color:'white',yoffset:-4,font:{family:'Arial',size:10,weight:'bold'}}}));
-  }
-  mapElement.graphics.addMany(graphics);highlight(null);
-  mapStatus.textContent=items.length?items.length+' sample locations / ArcGIS map':'No matches, so there are no activity pins.';
- };
- globalThis.selectActivityOnMap=async id=>{
-  if(!(globalThis.activityMapItems||[]).some(item=>item.id===id))return;
-  highlight(id);const revision=mapRevision;
-  try{await mapElement.goTo({center:LOCATIONS[id],zoom:15},{animate:false});}
-  catch{if(revision===mapRevision)mapStatus.textContent='The pin is selected. You can also pan the map manually.';}
- };
- mapElement.addEventListener('arcgisViewClick',async event=>{
-  const revision=mapRevision;
-  try{
-   const hit=await mapElement.hitTest(event.detail);
-   if(revision!==mapRevision)return;
-   const feature=hit.results.find(result=>result.type==='graphic'&&result.graphic.attributes?.id);
-   if(feature){highlight(feature.graphic.attributes.id);document.getElementById('activity-'+selectedId)?.scrollIntoView({behavior:'instant',block:'nearest'});}
-  }catch{/* Card controls remain available if map hit testing fails. */}
- });
- globalThis.updateActivityMap(globalThis.activityMapItems||[]);
-}catch{unavailable();}
-
-</script></body></html>
+      const $ = (id) => document.getElementById(id);
+      const kind = document.body.dataset.kind;
+      let version = 0,
+        controller = null,
+        accepted = null,
+        failed = null,
+        undoDraft = null;
+      function status(message) {
+        $("status").textContent = message;
+      }
+      function currentInput() {
+        return kind === "search"
+          ? { query: $("query").value.trim() }
+          : { message: $("original").value.trim(), tone: $("tone").value };
+      }
+      function invalidate() {
+        version++;
+        controller?.abort();
+        controller = null;
+        $("stop").hidden = true;
+        failed = null;
+        $("retry").hidden = true;
+        if (kind === "rewrite") $("apply").disabled = true;
+        status("Input changed. Request a new suggestion when you are ready.");
+      }
+      function source() {
+        return $("source").value;
+      }
+      function validate(value) {
+        return kind === "search"
+          ? validateSearch(value)
+          : validateRewrite(value);
+      }
+      function showResult(payload, input) {
+        accepted = {
+          value: structuredClone(payload.result),
+          input: structuredClone(input),
+          origin: payload.origin,
+        };
+        $("origin").textContent = payload.origin;
+        $("raw").textContent = JSON.stringify(payload.result, null, 2);
+        if (kind === "search") {
+          for (const key of Object.keys(FILTERS))
+            $(key).value = payload.result.filters[key];
+          $("explanation").textContent = payload.result.explanation;
+          $("unsupported").textContent = payload.result.unsupported.length
+            ? "This catalog cannot check: " +
+              payload.result.unsupported.join(", ")
+            : "";
+          $("acceptedQuery").textContent =
+            "Interpreted request: " + input.query;
+          renderMatches();
+        } else {
+          $("headline").value = payload.result.headline;
+          $("suggestion").value = payload.result.body;
+          $("suggestionContext").textContent =
+            "Suggestion for " +
+            input.tone +
+            " tone. Your current draft stays below.";
+          $("apply").disabled = false;
+        }
+      }
+      function renderMatches() {
+        const filters = Object.fromEntries(
+          Object.keys(FILTERS).map((key) => [key, $(key).value]),
+        );
+        const items = matchingActivities(filters);
+        $("matches").replaceChildren();
+        $("count").textContent =
+          items.length +
+          " matching activit" +
+          (items.length === 1 ? "y" : "ies");
+        globalThis.activityMapItems = structuredClone(items);
+        for (const [index, item] of items.entries()) {
+          const li = document.createElement("li"),
+            heading = document.createElement("h3"),
+            description = document.createElement("p"),
+            meta = document.createElement("p"),
+            locate = document.createElement("button");
+          li.id = "activity-" + item.id;
+          heading.textContent = index + 1 + ". " + item.name;
+          description.textContent = item.description;
+          meta.className = "result-meta";
+          for (const value of [item.environment, item.energy, item.budget]) {
+            const tag = document.createElement("span");
+            tag.textContent = value;
+            meta.append(tag);
+          }
+          locate.className = "quiet";
+          locate.textContent = "Show on map";
+          locate.setAttribute("aria-label", "Show " + item.name + " on map");
+          locate.addEventListener("click", () => {
+            if (globalThis.selectActivityOnMap)
+              globalThis.selectActivityOnMap(item.id);
+            else
+              $("mapSelection").textContent =
+                item.name +
+                " / Map is still unavailable. The catalog remains usable.";
+          });
+          li.append(heading, description, meta, locate);
+          $("matches").append(li);
+        }
+        if (!items.length) {
+          const li = document.createElement("li");
+          li.textContent =
+            "No catalog activities match all these filters. Change any filter to Any to broaden the results.";
+          $("matches").append(li);
+        }
+        if (globalThis.updateActivityMap) globalThis.updateActivityMap(items);
+      }
+      async function callAI(input, signal, requestId) {
+        const base =
+          location.protocol === "file:"
+            ? "http://127.0.0.1:8787"
+            : location.origin;
+        const response = await fetch(base + "/api/" + kind, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ input, requestId }),
+          signal,
+        });
+        let data;
+        try {
+          data = await response.json();
+        } catch {
+          throw new Error("The server returned an unreadable response.");
+        }
+        if (!response.ok) {
+          const error = new Error(data.error?.message || "The request failed.");
+          error.retryable = data.error?.retryable === true;
+          throw error;
+        }
+        return data;
+      }
+      async function generate(input = currentInput(), chosenSource = source()) {
+        if (chosenSource === "sample")
+          input =
+            kind === "search"
+              ? { query: "Something quiet, indoors, and free" }
+              : {
+                  message:
+                    "Come hang out with us and talk about what you learned.",
+                  tone: "friendly",
+                };
+        try {
+          kind === "search"
+            ? validateSearchInput(input)
+            : validateRewriteInput(input);
+        } catch (error) {
+          status(error.message);
+          return;
+        }
+        controller?.abort();
+        const id = ++version,
+          work = new AbortController();
+        controller = work;
+        failed = null;
+        $("retry").hidden = true;
+        $("stop").hidden = false;
+        if (kind === "rewrite") $("apply").disabled = true;
+        status(
+          kind === "search"
+            ? "Interpreting your request. Existing results remain available."
+            : "Writing a suggestion. Your current draft stays unchanged.",
+        );
+        let timedOut = false;
+        const timer = setTimeout(() => {
+          timedOut = true;
+          work.abort();
+        }, 18000);
+        try {
+          const payload =
+            chosenSource === "sample"
+              ? {
+                  result: structuredClone(
+                    kind === "search" ? SEARCH_SAMPLE : REWRITE_SAMPLE,
+                  ),
+                  origin: "Prepared sample / no AI call",
+                }
+              : await callAI(input, work.signal, crypto.randomUUID());
+          validate(payload.result);
+          if (id !== version || work.signal.aborted) return;
+          showResult(payload, input);
+          status("Ready. Review the result and adjust anything you need.");
+        } catch (error) {
+          if (id !== version) return;
+          if (work.signal.aborted) {
+            status(
+              timedOut
+                ? "The request took too long. Existing work remains available."
+                : "Stopped. Existing work remains available.",
+            );
+          } else {
+            failed = { input: structuredClone(input), source: chosenSource };
+            $("retry").hidden = error.retryable !== true;
+            status(
+              error.message +
+                " Existing work remains available. You can use the manual controls or load a prepared sample.",
+            );
+          }
+        } finally {
+          clearTimeout(timer);
+          if (id === version) {
+            controller = null;
+            $("stop").hidden = true;
+          }
+        }
+      }
+      $("generate").addEventListener("click", () => generate());
+      $("stop").addEventListener("click", () => {
+        invalidate();
+        status("Stopped. Existing work remains available.");
+      });
+      $("retry").addEventListener("click", () => {
+        if (failed) generate(failed.input, failed.source);
+      });
+      $("sample").addEventListener("click", () => {
+        const input =
+          kind === "search"
+            ? { query: "Something quiet, indoors, and free" }
+            : {
+                message:
+                  "Come hang out with us and talk about what you learned.",
+                tone: "friendly",
+              };
+        generate(input, "sample");
+      });
+      $("source").addEventListener("change", invalidate);
+      $("toolsToggle").addEventListener("click", () => {
+        $("tools").hidden = !$("tools").hidden;
+        $("toolsToggle").setAttribute(
+          "aria-expanded",
+          String(!$("tools").hidden),
+        );
+      });
+      if (kind === "search") {
+        $("query").addEventListener("input", invalidate);
+        for (const key of Object.keys(FILTERS))
+          $(key).addEventListener("change", () => {
+            version++;
+            controller?.abort();
+            controller = null;
+            $("stop").hidden = true;
+            failed = null;
+            $("retry").hidden = true;
+            $("origin").textContent = "Manual filters / no new AI call";
+            $("explanation").textContent = "You adjusted the filters yourself.";
+            $("unsupported").textContent = "";
+            renderMatches();
+            status("Filters updated immediately.");
+          });
+        renderMatches();
+      } else {
+        $("original").addEventListener("input", invalidate);
+        $("tone").addEventListener("change", invalidate);
+        $("draft").addEventListener("input", () => {
+          $("undo").disabled = true;
+          undoDraft = null;
+        });
+        $("apply").addEventListener("click", () => {
+          if ($("apply").disabled) return;
+          try {
+            validateRewrite({
+              headline: $("headline").value,
+              body: $("suggestion").value,
+            });
+          } catch (error) {
+            status(error.message);
+            return;
+          }
+          undoDraft = $("draft").value;
+          $("draft").value =
+            $("headline").value + "\n\n" + $("suggestion").value;
+          $("undo").disabled = false;
+          status(
+            "Suggestion added to your draft. You can edit it or undo this change.",
+          );
+          $("draft").focus();
+        });
+        $("undo").addEventListener("click", () => {
+          if (undoDraft === null) return;
+          $("draft").value = undoDraft;
+          undoDraft = null;
+          $("undo").disabled = true;
+          status("Your previous draft is restored.");
+        });
+        $("copy").addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText($("draft").value);
+            status("Draft copied.");
+          } catch {
+            $("draft").focus();
+            $("draft").select();
+            status("Select and copy the draft with your keyboard.");
+          }
+        });
+      }
+    </script>
+    <script data-backstage>
+      // Backstage controls stay out of the audience interface. Alt+P toggles them.
+      if (typeof window !== "undefined")
+        window.addEventListener("keydown", (event) => {
+          if (!event.altKey || event.key.toLowerCase() !== "p" || event.repeat)
+            return;
+          event.preventDefault();
+          const panel = document.getElementById("tools");
+          panel.hidden = !panel.hidden;
+          if (!panel.hidden) {
+            panel.open = true;
+            panel.scrollIntoView({ behavior: "instant", block: "nearest" });
+          }
+        });
+    </script>
+    <script type="module" data-map>
+      // ArcGIS Maps SDK 5.1. App-owned IDs and coordinates, never coordinates from AI.
+      // https://developers.arcgis.com/javascript/latest/sample-code/intro-map-components/
+      // https://developers.arcgis.com/javascript/latest/sample-code/intro-graphics/
+      // https://developers.arcgis.com/javascript/latest/references/core/layers/OpenStreetMapLayer/
+      const LOCATIONS = {
+        reading: [-77.026, 38.9],
+        sketch: [-77.037, 38.906],
+        puzzle: [-77.031, 38.91],
+        arcade: [-77.02, 38.906],
+        walk: [-77.041, 38.899],
+        trail: [-77.045, 38.912],
+        coffee: [-77.025, 38.91],
+        cooking: [-77.019, 38.899],
+        craft: [-77.036, 38.914],
+        quiz: [-77.029, 38.896],
+      };
+      const mapElement = document.getElementById("activityMap");
+      const mapStatus = document.getElementById("mapStatus");
+      let mapReady = false,
+        selectedId = null,
+        mapRevision = 0,
+        graphics = [];
+      function unavailable() {
+        mapStatus.textContent =
+          "Map unavailable. Activity cards and filters still work.";
+      }
+      function timed(promise, ms) {
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(
+            () => reject(new Error("Map load timeout")),
+            ms,
+          );
+          promise.then(
+            (v) => {
+              clearTimeout(timer);
+              resolve(v);
+            },
+            (e) => {
+              clearTimeout(timer);
+              reject(e);
+            },
+          );
+        });
+      }
+      try {
+        // Dynamic loader reports blocked CDN/network errors without blocking the catalog.
+        await timed(
+          new Promise((resolve, reject) => {
+            const loader = document.createElement("script");
+            loader.type = "module";
+            loader.src = "https://js.arcgis.com/5.1/";
+            loader.onload = resolve;
+            loader.onerror = () => reject(new Error("ArcGIS SDK unavailable"));
+            document.head.append(loader);
+          }),
+          16000,
+        );
+        await timed(customElements.whenDefined("arcgis-map"), 12000);
+        const [Map, Basemap, OpenStreetMapLayer, Graphic] = await timed(
+          $arcgis.import([
+            "@arcgis/core/Map.js",
+            "@arcgis/core/Basemap.js",
+            "@arcgis/core/layers/OpenStreetMapLayer.js",
+            "@arcgis/core/Graphic.js",
+          ]),
+          12000,
+        );
+        const basemapLayer = new OpenStreetMapLayer();
+        // Public OpenStreetMap tiles keep setup free of a second API key. Keep SDK attribution visible.
+        mapElement.map = new Map({
+          basemap: new Basemap({
+            baseLayers: [basemapLayer],
+            title: "OpenStreetMap",
+          }),
+        });
+        await timed(mapElement.viewOnReady(), 16000);
+        await timed(basemapLayer.load(), 12000);
+        mapReady = true;
+        function highlight(id) {
+          selectedId = id;
+          for (const graphic of graphics) {
+            if (graphic.symbol.type !== "simple-marker") continue;
+            graphic.symbol = {
+              type: "simple-marker",
+              size: graphic.attributes.id === id ? 29 : 23,
+              color: graphic.attributes.id === id ? "#a63b28" : "#236c51",
+              outline: { color: "#ffffff", width: 2 },
+            };
+          }
+          for (const item of globalThis.activityMapItems || [])
+            document
+              .getElementById("activity-" + item.id)
+              ?.classList.toggle("selected", item.id === id);
+          const item = (globalThis.activityMapItems || []).find(
+            (row) => row.id === id,
+          );
+          document.getElementById("mapSelection").textContent = item
+            ? item.name + " / illustrative location"
+            : "Select an activity to find its pin.";
+        }
+        globalThis.updateActivityMap = (items) => {
+          mapRevision++;
+          selectedId = null;
+          mapElement.graphics.removeAll();
+          graphics = [];
+          for (const [index, item] of items.entries()) {
+            const point = LOCATIONS[item.id];
+            if (!point) continue;
+            const geometry = {
+              type: "point",
+              longitude: point[0],
+              latitude: point[1],
+            };
+            graphics.push(
+              new Graphic({
+                geometry,
+                attributes: { id: item.id },
+                symbol: {
+                  type: "simple-marker",
+                  size: 23,
+                  color: "#236c51",
+                  outline: { color: "white", width: 2 },
+                },
+              }),
+            );
+            graphics.push(
+              new Graphic({
+                geometry,
+                attributes: { id: item.id },
+                symbol: {
+                  type: "text",
+                  text: String(index + 1),
+                  color: "white",
+                  yoffset: -4,
+                  font: { family: "Arial", size: 10, weight: "bold" },
+                },
+              }),
+            );
+          }
+          mapElement.graphics.addMany(graphics);
+          highlight(null);
+          mapStatus.textContent = items.length
+            ? items.length + " sample locations / ArcGIS map"
+            : "No matches, so there are no activity pins.";
+        };
+        globalThis.selectActivityOnMap = async (id) => {
+          if (
+            !(globalThis.activityMapItems || []).some((item) => item.id === id)
+          )
+            return;
+          highlight(id);
+          const revision = mapRevision;
+          try {
+            await mapElement.goTo(
+              { center: LOCATIONS[id], zoom: 15 },
+              { animate: false },
+            );
+          } catch {
+            if (revision === mapRevision)
+              mapStatus.textContent =
+                "The pin is selected. You can also pan the map manually.";
+          }
+        };
+        mapElement.addEventListener("arcgisViewClick", async (event) => {
+          const revision = mapRevision;
+          try {
+            const hit = await mapElement.hitTest(event.detail);
+            if (revision !== mapRevision) return;
+            const feature = hit.results.find(
+              (result) =>
+                result.type === "graphic" && result.graphic.attributes?.id,
+            );
+            if (feature) {
+              highlight(feature.graphic.attributes.id);
+              document
+                .getElementById("activity-" + selectedId)
+                ?.scrollIntoView({ behavior: "instant", block: "nearest" });
+            }
+          } catch {
+            /* Card controls remain available if map hit testing fails. */
+          }
+        });
+        globalThis.updateActivityMap(globalThis.activityMapItems || []);
+      } catch {
+        unavailable();
+      }
+    </script>
+  </body>
+</html>
