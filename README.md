@@ -8,8 +8,6 @@ Small, interactive JavaScript examples that show how to make AI features playful
 🧭 **[Open the demo hub](index.html)** after starting the local server  
 👩‍💻 **Presenter:** [Courtney Yatteau](https://github.com/cyatteau)
 
-> The audience PDF intentionally omits the optional live Quizizz game slide. It does not contain PowerPoint speaker notes.
-
 ## What you'll explore
 
 | Demo | File | Main idea | What keeps it dependable |
