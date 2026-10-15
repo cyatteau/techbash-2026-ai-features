@@ -1,0 +1,12 @@
+# Private credentials
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Local files
+*.log
+.DS_Store
+Thumbs.db
