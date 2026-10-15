@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tiny adventure | Waiting and recovery</title>
+<style>
+:root{color-scheme:light;--ink:#292c35;--muted:#606775;--paper:#f7f7f4;--line:#dbe1e5;--accent:#a63b28;--tint:#fff0e9;--green:#236c51;--error:#a33434}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:1120px;margin:auto;padding:24px 30px}button,input{font:inherit}button{cursor:pointer;border:1px solid var(--accent);border-radius:10px;padding:10px 16px;background:var(--accent);color:white;font-size:15px;font-weight:650;line-height:1.4}button:hover{filter:brightness(.96)}button:disabled{opacity:.5;cursor:default}.secondary{background:white;border-color:#bcc6cf;color:var(--ink)}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #236c51;outline-offset:4px}[hidden]{display:none!important}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:1.4px;color:var(--accent)}.simulation{font-size:12px;color:var(--muted)}h1{font-size:38px;line-height:1.1;letter-spacing:-1px;margin:16px 0 9px}h2{font-size:22px;line-height:1.2;letter-spacing:-.3px;margin:0 0 12px}p{margin:0 0 14px}.intro{color:var(--muted);margin:0 0 18px;font-size:16px}.tabs{display:flex;gap:8px;margin:0 0 18px}.tabs button{background:transparent;border-color:var(--line);color:var(--muted);font-size:14px;padding:10px 16px}.tabs button[aria-selected=true]{background:var(--ink);border-color:var(--ink);color:white}
+.workspace{display:grid;grid-template-columns:365px minmax(0,1fr);gap:20px;align-items:stretch}.experiment,.story{background:#fff;border:1px solid var(--line);border-radius:17px;padding:20px}.experiment{display:flex;flex-direction:column;min-height:335px}.experiment h2{font-size:20px;margin-bottom:10px}.instructions{font-size:14px;color:var(--muted);min-height:40px;margin-bottom:12px}.check{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;margin:0 0 12px}.check input{width:18px;height:18px;accent-color:var(--accent);margin:0}.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.requests{display:grid;gap:8px;margin-top:12px}.request{border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13px;background:#fbfcfd}.request-head{display:flex;justify-content:space-between;gap:10px;font-weight:650}.request-note{font-size:12px;color:var(--muted);margin-top:3px;min-height:18px}.request[data-state=waiting]{border-color:#c6d0e0}.request[data-state=accepted]{border-color:#93b5a4;background:#f0f8f2}.request[data-state=ignored]{border-color:#d2d7dc}.request[data-state=error]{border-color:#dda9a9;background:#fff3f1}.request[data-state=wrong]{border-color:#d89d95;background:#fff3f1}
+.story{display:flex;flex-direction:column;min-width:0}.story-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;color:var(--muted);margin-bottom:17px}.tag{font-size:11px;letter-spacing:.6px;font-weight:700;text-transform:uppercase;border-radius:6px;padding:4px 8px;color:var(--green);background:#edf6ef}.comparison{display:flex;gap:26px;margin:0 0 22px;padding:0 0 16px;border-bottom:1px solid var(--line)}.comparison span{display:block;font-size:12px;color:var(--muted)}.comparison strong{display:block;font-size:15px;margin-top:3px}.comparison strong.mismatch{color:var(--error)}#storyTitle{font:500 29px/1.2 Georgia,serif;letter-spacing:-.3px;margin:0 0 12px}#storyText{font:20px/1.6 Georgia,serif;max-width:650px;margin-bottom:16px;min-height:64px}.story-bottom{margin-top:auto;padding-top:13px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.outcome{min-height:61px;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:16px 0 0;background:white}.outcome strong{display:block;font-size:15px;font-weight:650;line-height:1.35}.outcome p{font-size:13px;color:var(--muted);margin:4px 0 0;line-height:1.4}.outcome[data-state=error],.outcome[data-state=wrong]{border-color:#d89d95}.outcome[data-state=success]{border-color:#93b5a4}.footer{display:flex;align-items:center;justify-content:space-between;margin-top:13px;gap:15px;font-size:12px;color:var(--muted)}.footer a{color:var(--muted);text-decoration:none}.reset{background:transparent;border-color:transparent;color:var(--muted);font-size:12px;padding:4px}.trust{font-size:12px;color:var(--accent);font-weight:650}
+@media(max-width:820px){main{padding:20px}.workspace{grid-template-columns:310px minmax(0,1fr)}.experiment,.story{padding:18px}h1{font-size:32px}#storyText{font-size:18px}#storyTitle{font-size:25px}.comparison{gap:14px}}
+@media(max-width:650px){.workspace{grid-template-columns:1fr}.experiment{min-height:0}.instructions{min-height:0}.story{min-height:300px}.top{align-items:flex-start;flex-direction:column;gap:4px}.tabs{flex-wrap:wrap}.tabs button{flex:1;white-space:nowrap;padding:9px}.footer{align-items:flex-start}.comparison{flex-wrap:wrap}}
+@media(min-width:821px){.workspace{height:360px}.experiment{min-height:0}}
+@media(max-height:700px) and (min-width:821px){main{padding-top:16px;padding-bottom:16px}h1{font-size:32px;margin-top:12px}.tabs{margin-bottom:13px}.intro{margin-bottom:13px}.workspace{height:315px}.experiment,.story{min-height:0;padding:18px}.outcome{margin-top:12px}.requests{margin-top:12px}.request-note{display:none}.comparison{margin-bottom:16px;padding-bottom:12px}#storyTitle{font-size:26px}#storyText{font-size:18px;line-height:1.5;margin-bottom:12px}}
+</style>
+</head>
+<body>
+<main>
+ <header><div class="top"><span class="brand">Tiny adventure</span><span class="simulation">Simulated AI responses / No AI calls</span></div><h1>Waiting &amp; recovery</h1><p class="intro">Three quick experiments with the same story. What should the app keep on screen?</p></header>
+ <div class="tabs" role="tablist" aria-label="Choose an experiment">
+  <button id="tab-timing" role="tab" aria-controls="workspace" aria-selected="true" tabindex="0">1. Late answers</button>
+  <button id="tab-stop" role="tab" aria-controls="workspace" aria-selected="false" tabindex="-1">2. Stop a request</button>
+  <button id="tab-recovery" role="tab" aria-controls="workspace" aria-selected="false" tabindex="-1">3. Recover</button>
+ </div>
+ <div id="workspace" class="workspace" role="tabpanel" aria-labelledby="tab-timing" tabindex="0">
+  <section class="experiment" aria-labelledby="experimentTitle">
+   <h2 id="experimentTitle">Which answer wins?</h2><p id="instructions" class="instructions">The older library answer takes 4 seconds. The newer station answer takes 1.</p>
+   <label id="guardRow" class="check"><input id="guard" type="checkbox">Protect my latest choice</label>
+   <div class="actions"><button id="run">Run two requests</button><button id="stop" class="secondary" hidden>Stop request</button></div>
+   <div id="recoveryActions" class="actions" hidden style="margin-top:10px"><button id="retry" class="secondary">Try again</button><button id="fallback" class="secondary">Use prepared scene</button></div>
+   <div class="requests" aria-label="Requests in this experiment">
+    <div id="requestA" class="request" data-state="idle"><div class="request-head"><span id="requestATitle">Library / 4 seconds</span><span id="requestAState">Ready</span></div><div id="requestANote" class="request-note">Starts first</div></div>
+    <div id="requestB" class="request" data-state="idle"><div class="request-head"><span id="requestBTitle">Station / 1 second</span><span id="requestBState">Ready</span></div><div id="requestBNote" class="request-note">Starts second</div></div>
+   </div>
+  </section>
+  <article class="story" aria-labelledby="storyTitle">
+   <div class="story-top"><span id="sceneCount">Accepted scene 1</span><span id="storyTag" class="tag">Already on screen</span></div>
+   <div class="comparison"><div><span>Your latest choice</span><strong id="latestChoice">Haunted library</strong></div><div><span>Story on screen</span><strong id="screenSetting">Haunted library</strong></div></div>
+   <h2 id="storyTitle">The library after closing</h2><p id="storyText">A book slides off the shelf and lands at your feet. Inside, a tiny dragon is asleep on a bookmark.</p>
+   <div id="origin" class="story-bottom">Prepared starting scene / No AI call</div>
+  </article>
+ </div>
+ <div id="outcome" class="outcome" data-state="idle" role="status" aria-live="polite" aria-atomic="true"><strong id="status">Protection is off. Run the requests to see the bug.</strong><p id="lesson">Then turn protection on and run the same experiment again.</p></div>
+ <footer class="footer"><span id="trust" class="trust">TRUST / Understand request ownership</span><div><button id="reset" class="reset">Reset experiment</button><a href="index.html">All demos</a></div></footer>
+</main>
+<script>
+'use strict';
+// Deterministic teaching fixtures. No fetch, SDK, provider key or network is used.
+// Every accepted scene is copied from this fixed catalog and displayed as text.
+const SCENES={
+ library:{setting:'Haunted library',title:'The library after closing',text:'A book slides off the shelf and lands at your feet. Inside, a tiny dragon is asleep on a bookmark.'},
+ station:{setting:'Space station',title:'A visitor at the window',text:'A tiny astronaut taps on the station window. It is a mouse, carrying a cheese-shaped distress beacon.'},
+ next:{setting:'Haunted library',title:'The dragon wakes up',text:'The dragon stretches, sneezes a spark, and points toward a hidden door. You decide to follow its flickering light.'}
+};
+const $=id=>document.getElementById(id);
+const tabs=['timing','stop','recovery'];
+let mode='timing',revision=0,operation=null,sceneNumber=1;
+function row(id,state,label,note){$('request'+id).dataset.state=state;$('request'+id+'State').textContent=label;$('request'+id+'Note').textContent=note;}
+function message(state,title,lesson){$('outcome').dataset.state=state;$('status').textContent=title;$('lesson').textContent=lesson;}
+function showScene(key,number,origin){
+ const scene=SCENES[key];sceneNumber=number;
+ $('storyTitle').textContent=scene.title;$('storyText').textContent=scene.text;
+ $('screenSetting').textContent=scene.setting;$('sceneCount').textContent='Accepted scene '+number;$('origin').textContent=origin;
+ $('screenSetting').className=$('latestChoice').textContent===scene.setting?'':'mismatch';
+ $('storyTag').textContent=number===1?'Starting scene':'Kept on screen';
+}
+function pause(ms,signal){return new Promise((resolve,reject)=>{
+ if(signal.aborted){reject(new Error('Stopped'));return;}
+ const onAbort=()=>{clearTimeout(timer);reject(new Error('Stopped'));};
+ const timer=setTimeout(()=>{signal.removeEventListener('abort',onAbort);resolve();},ms);
+ signal.addEventListener('abort',onAbort,{once:true});
+});}
+function isCurrent(id,signal){return id===revision&&!signal.aborted;}
+function stopWork(){revision++;operation?.abort();operation=null;}
+function lock(busy){$('run').disabled=busy;$('guard').disabled=busy;$('stop').hidden=!busy||mode==='timing';$('retry').disabled=busy;$('fallback').disabled=busy;}
+function begin(){stopWork();const work=new AbortController();operation=work;lock(true);return {id:revision,signal:work.signal};}
+function finish(id){if(id!==revision)return;operation=null;lock(false);}
+function reset(){
+ stopWork();lock(false);$('recoveryActions').hidden=true;
+ $('latestChoice').textContent='Haunted library';showScene('library',1,'Prepared starting scene / No AI call');
+ $('workspace').setAttribute('aria-labelledby','tab-'+mode);$('guardRow').hidden=mode!=='timing';$('requestB').hidden=mode==='stop';
+ $('run').hidden=false;
+ if(mode==='timing'){
+  $('experimentTitle').textContent='Which answer wins?';$('instructions').textContent='The older library answer takes 4 seconds. The newer station answer takes 1.';$('run').textContent='Run two requests';
+  $('requestATitle').textContent='Library / 4 seconds';$('requestBTitle').textContent='Station / 1 second';row('A','idle','Ready','Starts first');row('B','idle','Ready','Starts second');
+  message('idle',$('guard').checked?'Protection is on. The newest choice should win.':'Protection is off. Run the requests to see the bug.',$('guard').checked?'The older library answer must not replace the newer station answer.':'Then turn protection on and run the same experiment again.');
+  $('trust').textContent='TRUST / Understand request ownership';
+ }else if(mode==='stop'){
+  $('experimentTitle').textContent='Keep the current scene';$('instructions').textContent='Start a four-second continuation, then stop it before it finishes.';$('run').textContent='Request next scene';
+  $('requestATitle').textContent='Next scene / 4 seconds';row('A','idle','Ready','Your current scene stays visible while you wait.');
+  message('idle','The story is already usable.','A new request should not clear it or advance the scene count.');$('trust').textContent='TRUST / Retain accepted work and Stop cleanly';
+ }else{
+  $('experimentTitle').textContent='Offer a way forward';$('instructions').textContent='This request fails, retries once, then fails again. Your story should stay.';$('run').textContent='Run a failing request';
+  $('requestATitle').textContent='Attempt 1';$('requestBTitle').textContent='Attempt 2 / final';row('A','idle','Ready','Temporary failure');row('B','idle','Ready','One automatic retry, then stop');
+  message('idle','Two attempts is the limit.','After failure, try again or continue with a prepared scene.');$('trust').textContent='TRUST / Retain accepted work and Stop and recover';
+ }
+}
+function selectMode(value){mode=value;for(const tab of tabs){const selected=tab===mode;$('tab-'+tab).setAttribute('aria-selected',String(selected));$('tab-'+tab).setAttribute('tabindex',selected?'0':'-1');}reset();}
+async function race(){
+ const {id,signal}=begin(),protectedChoice=$('guard').checked;
+ $('latestChoice').textContent='Haunted library';showScene('library',1,'Prepared starting scene / No AI call');
+ row('A','waiting','Waiting','Older request is on its way.');row('B','idle','Ready','Starts second');message('waiting','The library request started first.','The station request will start next and finish sooner.');
+ try{
+  // Capture each request's version at start. Protection checks that version at commit.
+  let newestRequest=1;
+  const library=(async()=>{await pause(4000,signal);if(!isCurrent(id,signal))return;
+   if(protectedChoice&&newestRequest!==1){row('A','ignored','Ignored','Finished, but belongs to the older choice.');message('success','Space station stays. The older answer was ignored.','A successful response can still belong to a request you have moved on from.');}
+   else{showScene('library',1,'Simulated library response / No AI call');row('A','wrong','Replaced story','Older answer overwrote the newer choice.');message('wrong','Your choice says station. The story says library.','Turn on Protect my latest choice and run the same requests again.');}
+  })();
+  const station=(async()=>{await pause(200,signal);if(!isCurrent(id,signal))return;newestRequest=2;$('latestChoice').textContent='Space station';row('B','waiting','Waiting','Newer request is on its way.');message('waiting','Your latest choice is now Space station.','The library answer is still coming.');await pause(1000,signal);if(!isCurrent(id,signal))return;showScene('station',1,'Simulated station response / No AI call');row('B','accepted','On screen','The newer answer arrived first.');message('waiting','The station answer arrived. Keep watching.','The older library answer will arrive next.');})();
+  await Promise.all([library,station]);
+ }catch{/* Switching experiments or resetting cancels this replay. */}finally{finish(id);}
+}
+async function slowScene(){
+ const {id,signal}=begin();row('A','waiting','Waiting','Stop request is available.');message('waiting','Waiting for the next scene.','Accepted scene '+sceneNumber+' stays on screen while we wait.');
+ try{await pause(4000,signal);if(!isCurrent(id,signal))return;showScene('next',2,'Simulated continuation / No AI call');row('A','accepted','Accepted','One new scene accepted.');message('success','The new scene arrived.','Reset this experiment to try stopping it.');$('run').hidden=true;}
+ catch{/* Cancellation retains the accepted scene. */}finally{finish(id);}
+}
+async function failingRequest(){
+ const {id,signal}=begin();$('recoveryActions').hidden=true;row('A','waiting','Waiting','First attempt');row('B','idle','Ready','One retry available');message('waiting','Requesting the next scene. Attempt 1 of 2.','The current story stays on screen.');
+ try{
+  await pause(900,signal);if(!isCurrent(id,signal))return;row('A','error','Failed','Temporary connection failure.');row('B','waiting','Retrying','Attempt 2 of 2');message('waiting','Temporary failure. Retrying once, attempt 2 of 2.','The app has not advanced the story.');
+  await pause(1100,signal);if(!isCurrent(id,signal))return;row('B','error','Failed','Automatic retries stop here.');message('error','The request failed twice. Your scene is still here.','Try again, or use a clearly labeled prepared continuation.');$('recoveryActions').hidden=false;$('run').hidden=true;
+ }catch{/* Switching experiments or Stop cancels both attempts. */}finally{finish(id);}
+}
+async function retry(){
+ if(mode!=='recovery'||operation||$('recoveryActions').hidden)return;
+ const {id,signal}=begin();row('A','waiting','Waiting','Explicit retry / simulated success');row('B','idle','Not needed','No automatic second attempt');message('waiting','Trying again because you asked.','This teaching fixture succeeds on the explicit retry.');
+ try{await pause(1100,signal);if(!isCurrent(id,signal))return;showScene('next',2,'Simulated retry response / No AI call');row('A','accepted','Accepted','One new scene accepted.');$('recoveryActions').hidden=true;message('success','The retry worked. We accepted one new scene.','Retrying was your choice, and it advanced the story once.');}
+ catch{/* Cancellation keeps accepted work. */}finally{finish(id);}
+}
+function cancel(){
+ if(!operation)return;stopWork();lock(false);row('A',mode==='recovery'&&$('requestAState').textContent==='Failed'?'error':'ignored',mode==='recovery'&&$('requestAState').textContent==='Failed'?'Failed':'Stopped','Current story retained.');
+ if(mode==='recovery')row('B','ignored','Stopped','No further retry.');
+ $('recoveryActions').hidden=true;message('idle','Stopped. The accepted scene is unchanged.','Starting a request did not move the story forward.');
+}
+function fallback(){
+ if(mode!=='recovery'||operation||$('recoveryActions').hidden)return;
+ stopWork();showScene('next',2,'Prepared continuation / No AI call');$('recoveryActions').hidden=true;message('success','We continued with a prepared scene.','The source is labeled, and the story advances once.');
+}
+for(const tab of tabs){$('tab-'+tab).addEventListener('click',()=>selectMode(tab));$('tab-'+tab).addEventListener('keydown',event=>{
+ if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();const i=tabs.indexOf(tab),next=event.key==='Home'?0:event.key==='End'?2:(i+(event.key==='ArrowRight'?1:2))%3;selectMode(tabs[next]);$('tab-'+tabs[next]).focus();
+});}
+$('run').addEventListener('click',()=>mode==='timing'?race():mode==='stop'?slowScene():failingRequest());
+$('stop').addEventListener('click',cancel);$('retry').addEventListener('click',retry);$('fallback').addEventListener('click',fallback);$('reset').addEventListener('click',reset);$('guard').addEventListener('change',reset);
+reset();
+</script>
+</body>
+</html>

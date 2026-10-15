@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Tiny adventure · Demo 1</title>
+    <style>
+:root{color-scheme:light;--paper:#f6f7f5;--ink:#252c36;--muted:#626978;--green:var(--accent);--line:#dce1e5;--white:#fff;--error:#943b36;--accent:#b54332;--tint:#fcebe3}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:1120px;margin:0 auto;padding:36px 38px 42px}h1{font-size:clamp(36px,4.8vw,54px);line-height:1.08;letter-spacing:-1.8px;font-weight:750;margin:12px 0 14px}h2{font-size:28px;line-height:1.2;letter-spacing:-.6px;margin:0 0 18px}h3{font-size:20px;line-height:1.3;margin:0 0 8px}p{margin:10px 0 18px}.intro{max-width:760px;color:var(--muted);font-size:19px;margin-bottom:26px}.eyebrow{font-size:12px;font-weight:750;letter-spacing:1.8px;text-transform:uppercase;color:var(--accent);margin:0}.meta,.small{font-size:14px;color:var(--muted);line-height:1.5}.app-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;border-bottom:1px solid var(--line);gap:20px}.app-top a{font-size:13px;color:var(--muted);text-decoration:none}.app-top a:hover{text-decoration:underline}
+label{display:block;font-size:14px;font-weight:650;color:var(--ink)}select,input,textarea,button{font:inherit}select,input,textarea{display:block;width:100%;border:1px solid #bec7cf;border-radius:10px;background:var(--white);color:var(--ink);padding:12px 14px;margin-top:7px}select{min-height:48px}textarea{font:17px/1.6 system-ui,sans-serif;resize:vertical;min-height:132px}button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:11px 18px;font-size:16px;font-weight:650;line-height:1.5;cursor:pointer;transition:background .15s,transform .15s}button:hover{filter:brightness(.96)}button:active{transform:translateY(1px)}button:disabled,button[aria-disabled=true]{opacity:.48;cursor:default}.secondary,.choice{background:white;color:var(--ink);border-color:#bec7cf}.quiet{background:transparent;border-color:transparent;color:var(--accent);padding:8px 4px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.field{margin:20px 0}.controls{display:grid;grid-template-columns:1fr 1fr auto;gap:16px;align-items:end;padding:20px;background:var(--white);border:1px solid var(--line);border-radius:16px;margin:24px 0 12px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:4px}[hidden]{display:none!important}#toolsToggle{display:none!important}
+#status{min-height:28px;font-size:15px;color:var(--muted);margin:16px 0 10px}#status[data-state=error],#unsupported{color:var(--error)}#origin{font-size:12px;line-height:1.5;color:var(--muted)}#origin:empty,#modeNotice:empty,#context:empty{display:none}
+article{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 36px;margin:18px 0 22px;box-shadow:0 8px 25px #29344206}#storyTitle{font-family:Georgia,serif;font-size:34px;font-weight:500;letter-spacing:-.7px;margin-top:10px}#storyText{font-family:Georgia,serif;font-size:21px;line-height:1.7;white-space:pre-line;min-height:96px;max-width:900px}#sceneCount{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase}#choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.choice{text-align:left;min-height:62px;padding:15px 18px;border-color:#d2d8df;border-radius:12px;background:var(--tint);font-weight:600}.choice:hover{border-color:var(--accent)}.footer{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-top:16px;border-top:1px solid var(--line)}.end{color:var(--accent)}
+details{margin:18px 0}summary{cursor:pointer;font-size:15px;font-weight:650;color:var(--accent)}pre{font:14px/1.5 ui-monospace,monospace;white-space:pre-wrap;overflow-wrap:anywhere;padding:18px;background:#f1f3f5;border-radius:10px;max-height:360px;overflow:auto}.tools{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin:24px 0;font-size:16px}.tools .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}.check{display:flex;align-items:center;gap:10px;font-weight:500;margin:16px 0}.check input{width:18px;min-height:18px;margin:0;accent-color:var(--accent)}#busy{font-size:13px;color:var(--muted)}#trace{max-height:220px;overflow:auto;font-size:14px}#savedList{list-style:none;padding:0}#savedList li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}#savedList span{flex:1}a{color:var(--accent)}nav{margin-top:24px;font-size:14px}
+.filter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:18px 0}.finder-results{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:start}.catalog-column h2{font-size:23px;margin-bottom:16px}.results{list-style:none;padding:0;margin:0;display:grid;gap:12px;max-height:465px;overflow:auto;padding-right:6px}.results li{padding:20px;background:white;border:1px solid var(--line);border-radius:14px}.results li.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--tint)}.results p{margin:6px 0}.result-meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 8px}.result-meta span{background:var(--tint);color:var(--accent);padding:3px 8px;border-radius:6px;font-size:12px;font-weight:650}.map-panel{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:white}.map-heading{padding:18px 20px 8px}.map-heading h2{font-size:21px;margin:0}.map-heading p{font-size:13px;margin:8px 0;color:var(--muted)}arcgis-map{display:block;width:100%;height:410px;background:#edf2ed}.map-footer{min-height:42px;padding:11px 18px;margin:0;font-size:12px;color:var(--muted)}#mapSelection{font-size:13px;color:var(--accent);margin:0 0 8px;min-height:20px}#query{min-height:90px}.search-request{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end;background:white;border:1px solid var(--line);border-radius:16px;padding:20px}.search-request .field{margin:0}.search-request .actions{padding-bottom:2px}.scope{font-size:12px;color:var(--muted);margin:16px 0}
+.columns,.layout{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}.columns>section,.layout>section,.composer{background:white;border:1px solid var(--line);border-radius:16px;padding:24px}.columns{margin-top:24px}.columns h2,.layout h2{font-size:23px}.columns label{margin-bottom:15px}#headline{margin-bottom:12px}#draft{min-height:244px}#original{min-height:105px}.composer{margin-top:24px}.composer .field{margin:0}.composer-controls{display:flex;gap:16px;align-items:end;margin-top:16px}.composer-controls label{width:210px}.composer-controls .actions{padding-bottom:1px}.guess{font-size:28px;font-weight:700;color:var(--accent);min-height:36px}canvas{display:block;width:100%;height:auto;background:white;border:1px solid #cbd5df;border-radius:12px;touch-action:none;cursor:crosshair}#kept{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}#keptImage{width:140px;height:100px;object-fit:contain;background:white;float:left;margin-right:16px}#kept:after{content:"";display:block;clear:both}.layout .actions{margin:16px 0}.layout textarea{min-height:142px}.lab-panel{margin:18px 0;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 22px}.lab-panel summary{font-size:16px}.lab-panel .grid{grid-template-columns:1fr 1fr 1fr}.lab-controls{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}.lab-controls>div{min-width:0}.lab-controls .check{font-size:14px}.lab-controls .small{font-size:12px}.lab-story{margin-top:18px}
+@media(min-width:1500px){main{padding-top:52px}}@media(max-width:850px){.finder-results{grid-template-columns:1fr}.filter-grid{grid-template-columns:repeat(3,1fr)}.search-request{grid-template-columns:1fr}.results{max-height:none}.columns,.layout{grid-template-columns:1fr}.lab-controls{grid-template-columns:1fr}}@media(max-width:620px){main{padding:22px 18px 32px}h1{letter-spacing:-1px}.controls{grid-template-columns:1fr 1fr;padding:16px}.controls>button{grid-column:1/-1}article{padding:24px}#storyTitle{font-size:29px}#storyText{font-size:19px}#choices,.tools .grid,.filter-grid{grid-template-columns:1fr 1fr}.footer{align-items:flex-start;flex-direction:column}.composer-controls{align-items:stretch;flex-direction:column}.composer-controls label{width:100%}.columns>section,.layout>section{padding:20px}#savedList li{flex-wrap:wrap}#savedList span{flex-basis:100%}}@media(prefers-reduced-motion:reduce){button{transition:none}button:active{transform:none}}
+:root{--accent:#a63b28;--tint:#fcf0e8}</style>
+  <style id="compact-layout">
+
+/* Compact presentation spacing. Content, controls and scripts are unchanged. */
+main{padding:18px 26px 22px}
+.app-top{padding-bottom:7px}
+h1{font-size:36px;line-height:1.1;letter-spacing:-1px;margin:9px 0 9px}
+h2{font-size:24px;margin-bottom:12px}
+h3{font-size:19px;margin-bottom:6px}
+p{margin:6px 0 10px}
+p:empty{margin:0}
+.eyebrow{margin:0}
+.intro{font-size:18px;margin-bottom:14px}
+button{padding:8px 14px}
+select,input,textarea{padding:8px 12px;margin-top:5px}
+select{min-height:40px}
+textarea{min-height:100px}
+.field{margin:12px 0}
+.controls{padding:12px 16px;margin:14px 0 8px;gap:14px}
+#status{min-height:22px;margin:8px 0 6px}
+#origin{margin:4px 0 8px}
+.small,.meta{line-height:1.4}
+article{padding:18px 22px;margin:12px 0}
+#storyTitle{font-size:29px;margin-top:7px;margin-bottom:10px}
+#storyText{font-size:20px;line-height:1.45;min-height:56px;margin:8px 0 12px}
+#choices{gap:10px;margin:14px 0}
+.choice{min-height:48px;padding:10px 14px}
+.footer{padding-top:10px;gap:12px}
+details{margin:10px 0}
+.quiet{padding:6px 4px}
+.tools{padding:16px;margin:14px 0}
+.tools .grid{margin:10px 0}
+#savedList li{padding:8px 0}
+.columns,.layout{gap:18px}
+.columns{margin-top:12px}
+.columns>section,.layout>section,.composer{padding:16px 18px}
+.columns h2,.layout h2{font-size:22px;margin-bottom:10px}
+.columns label{margin-bottom:10px}
+.composer{margin-top:14px}
+.composer-controls{margin-top:10px}
+.layout .actions{margin:10px 0}
+#headline{margin-bottom:8px}
+#kept{margin-top:16px;padding-top:14px}
+.guess{font-size:25px;min-height:30px}
+@media(min-width:1500px){main{padding-top:22px}}
+@media(max-width:620px){main{padding:16px 18px 22px}h1{font-size:32px}article{padding:16px 18px}.controls{padding:12px}.columns>section,.layout>section{padding:16px}}
+
+</style></head>
+  <body data-stage="1">
+    <main>
+      <div class="app-top"><p class="eyebrow">Tiny adventure</p><a href="index.html">All demos</a></div>
+      <h1>Tiny adventure</h1>
+      <p class="intro">
+        Choose a path through a short story. Three scenes, with you in control.
+      </p>
+
+      <div class="controls">
+        <label
+          >Setting<select id="setting">
+            <option value="library">Haunted library</option>
+            <option value="station">Space station</option>
+            <option value="garden">Secret garden</option>
+          </select></label
+        ><label
+          >Tone<select id="tone">
+            <option value="mysterious">Mysterious</option>
+            <option value="silly">Silly</option>
+          </select></label
+        ><button id="start">Start adventure</button>
+      </div>
+      <p id="modeNotice" class="small"></p>
+      <p id="status" role="status" aria-live="polite" aria-atomic="true">
+        Ready when you are.
+      </p>
+      <div class="actions">
+        <button id="cancel" class="secondary" hidden>Stop request</button
+        ><button id="retry" class="secondary" hidden>Try again</button
+        ><button id="fallback" class="secondary" hidden>
+          Continue with authored story
+        </button>
+      </div>
+      <article aria-labelledby="storyTitle">
+        <div id="sceneCount" class="meta"></div>
+        <div id="context" class="meta"></div>
+        <h2 id="storyTitle">A story waiting to happen</h2>
+        <p id="storyText">Pick a setting and a tone. Your first scene begins with a click.</p>
+        <div id="choices"></div>
+        <p id="ending" class="end" hidden>
+          The end. This version is yours to keep.
+        </p>
+        <div class="footer">
+          <span id="origin" class="meta"></span>
+          <div class="actions">
+            <button id="back" class="quiet" hidden>Previous scene</button
+            ><button id="keep" class="secondary" disabled>
+              Keep this version
+            </button>
+          </div>
+        </div>
+      </article>
+      <details>
+        <summary>Kept adventures <span id="savedCount">0</span></summary>
+        <p class="small">
+          Up to ten versions in this browser. Loading restores their setting,
+          tone and choices. Export a copy if you want to keep them elsewhere.
+        </p>
+        <ul id="savedList"></ul>
+        <button id="export" class="secondary">Export kept adventures</button>
+      </details>
+      <button
+        id="toolsToggle"
+        class="quiet"
+        aria-expanded="false"
+        aria-controls="tools"
+       hidden>
+        Presenter tools
+      </button>
+      <section id="tools" class="tools" hidden aria-label="Presenter tools">
+        <h3>Presenter tools</h3>
+        <p class="small">
+          Only Normal + Real AI sends an AI request. Every simulation and
+          injected response is labeled and makes no AI call.
+        </p>
+        <div class="grid">
+          <label
+            >Response source<select id="source">
+              <option value="ai">Real AI</option>
+              <option value="authored">Authored baseline</option>
+            </select></label
+          ><label
+            >Local server<input
+              id="endpoint"
+              type="url"
+              aria-label="Local server address"
+          /></label>
+        </div>
+        <details>
+          <summary>Timing and recovery tests</summary>
+          <label
+            >Response behavior<select id="scenario">
+              <option value="normal">Normal</option>
+              <option value="slow">Slow success · 4 seconds</option>
+              <option value="network">Temporary failure</option>
+              <option value="flaky">Fail once, then succeed</option>
+              <option value="refusal">Refusal</option>
+              <option value="invalid">Invalid scene</option>
+            </select></label
+          ><label class="check"
+            ><input type="checkbox" id="autoRetry" checked />Retry temporary
+            failures once</label
+          >
+          <p class="small">
+            At most two attempts per action. Invalid scenes and refusals do not
+            retry automatically.
+          </p>
+          <label class="check"
+            ><input type="checkbox" id="guard" checked />Only the newest request
+            may update the story</label
+          ><button id="replay" class="secondary" hidden>
+            Replay overlapping requests
+          </button>
+          <p class="small">
+            Replay starts a 4-second library fixture, then a 1-second station
+            fixture. Turn the guard off to reproduce an intentional bug in the
+            reliability lab. Reset it on before normal play.
+          </p>
+          <span id="busy">0 active requests</span>
+        </details>
+        <details>
+          <summary>Response contract</summary>
+          <p class="small">
+            Inspect the accepted scene, or inject a labeled test as a new first
+            scene. Rejected input leaves the current story intact.
+          </p>
+          <pre id="raw">No response yet</pre>
+          <label
+            >Test sample<select id="testSample">
+              <option value="valid">Valid scene</option>
+              <option value="extra">Extra field</option>
+              <option value="missing">Missing choices</option>
+              <option value="wrongEnding">Wrong ending</option>
+              <option value="markup">Markup-looking text</option>
+              <option value="malformed">Malformed JSON</option>
+            </select></label
+          ><label
+            >Test JSON<textarea
+              id="testJSON"
+              spellcheck="false"
+            ></textarea></label
+          ><button id="applyTest" class="secondary">Apply test scene</button>
+          <p id="testMessage" role="status"></p>
+        </details>
+        <details>
+          <summary>Request trace</summary>
+          <ol id="trace"></ol>
+        </details>
+      </section>
+      
+    </main>
+    <script>
+      // The authored baseline is a small finite tree. It never calls a model.
+      const SETTINGS = {
+        library: "Haunted library",
+        station: "Space station",
+        garden: "Secret garden",
+      };
+      const TONES = { mysterious: "Mysterious", silly: "Silly" };
+      const TREES = {
+        library: {
+          title: "The book after closing",
+          intro:
+            "The library is closed, but one book glows on the return desk. Footsteps sound from an aisle you thought was empty.",
+          silly:
+            "The library is closed. A glowing book slides across the desk and demands a library card. Somewhere in the stacks, a ghost sneezes.",
+          first: ["Read the glowing book", "Follow the footsteps"],
+          branches: {
+            a: {
+              title: "A page with a doorway",
+              text: "The book opens to a drawing of this very room. A golden page folds outward like a door. You can enter the page, or close the book before the room changes.",
+              labels: ["Turn the golden page", "Close the cover"],
+              ends: [
+                "You step through the golden page and find the missing reading room. Its ghostly librarian thanks you and lends you one impossible book. You return before morning.",
+                "You close the cover. The doorway becomes a bookmark, small enough to keep. The library settles into silence, and you leave with a secret for another night.",
+              ],
+            },
+            b: {
+              title: "The night librarian",
+              text: "At the end of the aisle, a translucent librarian is searching for a missing map. They notice you and hold out an empty folder.",
+              labels: ["Ask about the map", "Offer to help"],
+              ends: [
+                "The librarian shows you a map drawn on the ceiling. You find the lost archive by following its silver lines. The librarian turns the lights on just for you.",
+                "You help the librarian sort the returned books. The missing map slips from a cover, and the librarian rewards you with a quiet tour of the hidden archive.",
+              ],
+            },
+          },
+        },
+        station: {
+          title: "A signal in the quiet",
+          intro:
+            "You are alone on a quiet space station. The radio blinks with a new signal. Outside the observation hatch, a small light drifts past.",
+          silly:
+            "You are alone on a space station, except for a robot that keeps offering toast. The radio beeps. A tiny light outside the hatch looks suspiciously like another toaster.",
+          first: ["Answer the radio", "Open the observation hatch"],
+          branches: {
+            a: {
+              title: "A visitor on the radio",
+              text: "The signal belongs to a lost survey drone. It can see your station, but its navigation memory is damaged. You can guide it with the beacon or inspect its recorded route.",
+              labels: ["Switch on the beacon", "Check the recorded route"],
+              ends: [
+                "The beacon guides the drone home. It returns a collection of star photographs, and you spend the quiet watch finding familiar constellations.",
+                "The recorded route reveals a nearby repair buoy. You send the drone there, and its grateful operator shares a map of a new comet.",
+              ],
+            },
+            b: {
+              title: "A drifting capsule",
+              text: "Behind the observation hatch, a small capsule carries a paper star chart. It has a return address and a blinking locator.",
+              labels: ["Read the star chart", "Activate the locator"],
+              ends: [
+                "The chart marks a meteor shower about to pass. You watch it through the window, then send the capsule back with a thank you note.",
+                "The locator summons a survey ship. Its crew retrieves the capsule and invites you to share the view of the approaching meteor shower.",
+              ],
+            },
+          },
+        },
+        garden: {
+          title: "The garden at moonrise",
+          intro:
+            "A paper crane waits on the path of a hidden garden. Beyond it, a moonlit gate stands slightly open. The fountain has begun to hum.",
+          silly:
+            "A paper crane on the garden path asks if you brought snacks. The moonlit gate squeaks a dramatic greeting. Even the fountain seems to be laughing.",
+          first: ["Follow the paper crane", "Open the moonlit gate"],
+          branches: {
+            a: {
+              title: "The crane and its reflection",
+              text: "The crane lands beside the fountain. Its reflection points toward a narrow path, while a folded message rests inside its wing.",
+              labels: ["Unfold the message", "Follow the reflection"],
+              ends: [
+                "The message is an invitation to the garden party. You find lanterns, music, and a place saved for you beneath the oldest tree.",
+                "The reflection leads you to a pond of floating lanterns. The crane folds itself into a tiny boat, and you add a lantern of your own.",
+              ],
+            },
+            b: {
+              title: "The gatekeeper stone",
+              text: "Through the gate, the fountain lights a stone with an inscription. A path curves around it toward a circle of lanterns.",
+              labels: [
+                "Read the stone inscription",
+                "Walk toward the lanterns",
+              ],
+              ends: [
+                "The inscription asks you to leave the garden kinder than you found it. You water a small seedling, and its first flower lights the path home.",
+                "The lanterns surround a tree full of handwritten wishes. You add your own, and a gentle breeze carries one bright leaf into your pocket.",
+              ],
+            },
+          },
+        },
+      };
+      function authoredScene(input) {
+        const tree = TREES[input.setting],
+          turn = input.history.length + 1;
+        const choices = (labels) =>
+          labels.map((label, i) => ({ id: i === 0 ? "a" : "b", label }));
+        if (turn === 1)
+          return {
+            title: tree.title,
+            text: input.tone === "silly" ? tree.silly : tree.intro,
+            choices: choices(tree.first),
+            ending: false,
+          };
+        const first = input.history[0].chosenId,
+          branch = tree.branches[first];
+        const last = input.history.at(-1),
+          label = last.choices.find((c) => c.id === last.chosenId).label;
+        const acknowledgment = `Your choice: ${label}.\n\n`;
+        if (turn === 2)
+          return {
+            title: branch.title,
+            text: acknowledgment + branch.text,
+            choices: choices(branch.labels),
+            ending: false,
+          };
+        const ending = branch.ends[last.chosenId === "a" ? 0 : 1];
+        return {
+          title: "An ending to keep",
+          text: acknowledgment + ending,
+          choices: [],
+          ending: true,
+        };
+      }
+
+      // Shared verbatim between each standalone HTML and the local server.
+      function exact(value, keys) {
+        if (
+          !value ||
+          typeof value !== "object" ||
+          Array.isArray(value) ||
+          Object.keys(value).length !== keys.length ||
+          keys.some((k) => !Object.hasOwn(value, k))
+        )
+          throw new Error("The response fields do not match the contract.");
+      }
+      function boundedText(value, max, label) {
+        if (typeof value !== "string" || !value.trim() || value.length > max)
+          throw new Error(
+            `${label} must be nonempty text up to ${max} characters.`,
+          );
+      }
+      function validateScene(scene, turn) {
+        exact(scene, ["title", "text", "choices", "ending"]);
+        boundedText(scene.title, 80, "Title");
+        boundedText(scene.text, 900, "Scene");
+        if (typeof scene.ending !== "boolean" || scene.ending !== (turn === 3))
+          throw new Error(
+            "The ending flag does not match the app-owned scene count.",
+          );
+        if (
+          !Array.isArray(scene.choices) ||
+          scene.choices.length !== (turn === 3 ? 0 : 2)
+        )
+          throw new Error(
+            "An active scene needs two choices. The ending needs none.",
+          );
+        for (const [i, choice] of scene.choices.entries()) {
+          exact(choice, ["id", "label"]);
+          if (choice.id !== (i === 0 ? "a" : "b"))
+            throw new Error("Choice IDs must be a then b.");
+          boundedText(choice.label, 70, "Choice label");
+        }
+        if (
+          scene.choices.length === 2 &&
+          scene.choices[0].label.trim().toLowerCase() ===
+            scene.choices[1].label.trim().toLowerCase()
+        )
+          throw new Error("The two choices need different labels.");
+        return scene;
+      }
+      function validateInput(input) {
+        exact(input, ["setting", "tone", "history"]);
+        if (
+          !["library", "station", "garden"].includes(input.setting) ||
+          !["mysterious", "silly"].includes(input.tone)
+        )
+          throw new Error("Choose an available setting and tone.");
+        if (!Array.isArray(input.history) || input.history.length > 2)
+          throw new Error("This adventure has at most three scenes.");
+        for (const [i, row] of input.history.entries()) {
+          exact(row, ["scene", "chosenId"]);
+          validateScene(row.scene, i + 1);
+          if (!row.scene.choices.some((c) => c.id === row.chosenId))
+            throw new Error("Choose an action from the accepted scene.");
+        }
+        return input;
+      }
+
+      const $ = (id) => document.getElementById(id),
+        copy = (value) => structuredClone(value);
+      const stage = Number(document.body.dataset.stage);
+      const STORAGE_KEY = "techbash-tiny-adventures-v1";
+      let game = null,
+        version = 0,
+        cancelEpoch = 0,
+        lastAttempt = null,
+        saved = [];
+      const pending = new Map();
+      class DemoError extends Error {
+        constructor(message, code = "invalid", retryable = false) {
+          super(message);
+          this.code = code;
+          this.retryable = retryable;
+        }
+      }
+      function setStatus(text, state = "idle") {
+        $("status").textContent = text;
+        $("status").dataset.state = state;
+      }
+      function trace(text) {
+        const li = document.createElement("li");
+        li.textContent = text;
+        $("trace").prepend(li);
+        while ($("trace").children.length > 16)
+          $("trace").lastElementChild.remove();
+      }
+      function currentConfig() {
+        return { setting: $("setting").value, tone: $("tone").value };
+      }
+      function sameConfig() {
+        return (
+          !!game &&
+          game.setting === $("setting").value &&
+          game.tone === $("tone").value
+        );
+      }
+      function updateControls() {
+        const busy = pending.size > 0;
+        $("cancel").hidden = !busy;
+        $("busy").textContent =
+          `${pending.size} active request${pending.size === 1 ? "" : "s"}`;
+        for (const button of $("choices").children) {
+          button.disabled = !sameConfig();
+          button.setAttribute("aria-disabled", String(busy || !sameConfig()));
+        }
+        $("back").hidden = !game || game.scenes.length < 2;
+        $("back").disabled = busy;
+        $("keep").disabled = !game;
+      }
+      function cancelPending(
+        message = "Stopped. Your previous scene is still here.",
+        quiet = false,
+      ) {
+        cancelEpoch = ++version;
+        for (const work of pending.values()) work.controller.abort();
+        pending.clear();
+        $("retry").hidden = true;
+        $("fallback").hidden = true;
+        updateControls();
+        if (!quiet) setStatus(message, "canceled");
+      }
+      function canCommit(id, race = false) {
+        return (
+          id === version ||
+          (stage === 2 &&
+            race &&
+            !$("guard").checked &&
+            id > cancelEpoch &&
+            pending.has(id))
+        );
+      }
+      function renderScene() {
+        if (!game) {
+          $("storyTitle").textContent = "Your story starts here";
+          $("storyText").textContent =
+            "Choose a setting, then start an adventure.";
+          $("sceneCount").textContent = "Three scenes, two choices at a time";
+          $("context").textContent = "";
+          $("origin").textContent = "No response yet";
+          $("choices").replaceChildren();
+          updateControls();
+          return;
+        }
+        const record = game.scenes.at(-1),
+          scene = record.scene;
+        $("context").textContent =
+          `${SETTINGS[game.setting]} · ${TONES[game.tone]}`;
+        $("sceneCount").textContent =
+          `Scene ${game.scenes.length} of 3${scene.ending ? " · Complete" : ""}`;
+        // Generated and saved strings always go into text nodes.
+        $("storyTitle").textContent = scene.title;
+        $("storyText").textContent = scene.text;
+        $("origin").textContent = record.origin;
+        $("raw").textContent = JSON.stringify(scene, null, 2);
+        const focusWasChoice = Array.from($("choices").children).includes(
+          document.activeElement,
+        );
+        // Reuse the two stable action controls so an accepted scene does not discard focus.
+        if ($("choices").children.length !== scene.choices.length)
+          $("choices").replaceChildren();
+        for (const [i, choice] of scene.choices.entries()) {
+          let button = $("choices").children[i];
+          if (!button) {
+            button = document.createElement("button");
+            button.className = "choice";
+            button.addEventListener("click", () => choose(choice.id));
+            $("choices").append(button);
+          }
+          button.textContent = choice.label;
+        }
+        $("ending").hidden = !scene.ending;
+        updateControls();
+        if (scene.ending && focusWasChoice)
+          $("keep").focus({ preventScroll: true });
+      }
+      function commit(payload, snapshot, id, race = false) {
+        validateScene(payload.scene, snapshot.input.history.length + 1);
+        if (!canCommit(id, race)) {
+          trace(`Request ${id}: ignored stale success.`);
+          return;
+        }
+        const records = snapshot.input.history.map((row, i) => ({
+          ...copy(row),
+          origin: snapshot.priorOrigins?.[i] || "Previous accepted scene",
+        }));
+        // The request input contains only the scene and selected ID. Origins remain app metadata.
+        game = {
+          setting: snapshot.input.setting,
+          tone: snapshot.input.tone,
+          scenes: records.concat([
+            {
+              scene: copy(payload.scene),
+              chosenId: null,
+              origin: payload.origin,
+            },
+          ]),
+        };
+        renderScene();
+        $("retry").hidden = true;
+        $("fallback").hidden = true;
+        setStatus(
+          payload.scene.ending
+            ? "Adventure complete. You can keep this version or start another."
+            : `Scene ready for ${SETTINGS[game.setting]}. Choose what happens next.`,
+          "success",
+        );
+        trace(
+          `Request ${id}: accepted scene ${game.scenes.length} for ${SETTINGS[game.setting]}.`,
+        );
+      }
+      function snapshot(input) {
+        return {
+          input: copy(input),
+          source: $("source").value,
+          scenario: $("scenario").value,
+          priorOrigins: game?.scenes.map((x) => x.origin) || [],
+          autoRetry: $("autoRetry").checked,
+        };
+      }
+      function delay(ms, signal) {
+        return new Promise((resolve, reject) => {
+          if (signal.aborted)
+            return reject(new DOMException("Stopped", "AbortError"));
+          const timer = setTimeout(done, ms);
+          function done() {
+            signal.removeEventListener("abort", stop);
+            resolve();
+          }
+          function stop() {
+            clearTimeout(timer);
+            signal.removeEventListener("abort", stop);
+            reject(new DOMException("Stopped", "AbortError"));
+          }
+          signal.addEventListener("abort", stop, { once: true });
+        });
+      }
+      async function requestAI(input, signal, requestId) {
+        const endpoint = $("endpoint").value.trim().replace(/\/$/, "");
+        let url;
+        try {
+          url = new URL(endpoint);
+        } catch {
+          throw new DemoError(
+            "Use a valid local server address.",
+            "configuration",
+          );
+        }
+        if (!["http:", "https:"].includes(url.protocol))
+          throw new DemoError(
+            "Use an http or https server address.",
+            "configuration",
+          );
+        const controller = new AbortController();
+        let timedOut = false;
+        const abort = () => controller.abort();
+        signal.addEventListener("abort", abort, { once: true });
+        if (signal.aborted) controller.abort();
+        const timer = setTimeout(() => {
+          timedOut = true;
+          controller.abort();
+        }, 18000);
+        try {
+          const response = await fetch(`${endpoint}/api/scene`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ input, requestId }),
+            signal: controller.signal,
+          });
+          let payload;
+          try {
+            payload = await response.json();
+          } catch {
+            throw new DemoError(
+              "The server returned unreadable JSON. Check the page and server address.",
+              "invalid",
+            );
+          }
+          if (!response.ok)
+            throw new DemoError(
+              payload.error?.message || "This request failed.",
+              payload.error?.code || "service",
+              payload.error?.retryable === true,
+            );
+          return payload;
+        } catch (error) {
+          if (timedOut)
+            throw new DemoError(
+              "This request timed out. Your previous scene is still here.",
+              "timeout",
+            );
+          if (error.name === "AbortError" || error instanceof DemoError)
+            throw error;
+          throw new DemoError(
+            "Cannot reach the local server. Start server.mjs on port 8787.",
+            "network",
+          );
+        } finally {
+          clearTimeout(timer);
+          signal.removeEventListener("abort", abort);
+        }
+      }
+      async function responseFor(snap, signal, attempt, requestId) {
+        if (snap.raceDelay !== undefined) {
+          await delay(snap.raceDelay, signal);
+          return {
+            scene: authoredScene(toAuthored(snap.input)),
+            origin: "Timing fixture · no AI call",
+          };
+        }
+        if (snap.scenario !== "normal") {
+          await delay(snap.scenario === "slow" ? 4000 : 650, signal);
+          if (
+            snap.scenario === "network" ||
+            (snap.scenario === "flaky" && attempt === 1)
+          )
+            throw new DemoError(
+              "Simulated temporary failure. Your previous scene is still here.",
+              "temporary",
+              true,
+            );
+          if (snap.scenario === "refusal")
+            throw new DemoError(
+              "Simulated refusal. Try another setting or use the authored story.",
+              "refusal",
+            );
+          const scene = authoredScene(toAuthored(snap.input));
+          if (snap.scenario === "invalid")
+            scene.choices = [{ id: "x", label: "An invalid action" }];
+          return { scene, origin: "Response fixture · no AI call" };
+        }
+        if (snap.source === "authored") {
+          await delay(250, signal);
+          return {
+            scene: authoredScene(toAuthored(snap.input)),
+            origin: "Authored baseline · no AI call",
+          };
+        }
+        return requestAI(snap.input, signal, requestId);
+      }
+      function toAuthored(input) {
+        return {
+          setting: input.setting,
+          tone: input.tone,
+          history: input.history.map((r) => ({
+            ...r.scene,
+            chosenId: r.chosenId,
+          })),
+        };
+      }
+      async function runRequest(snap, { race = false } = {}) {
+        if (!race) cancelPending("", true);
+        validateInput(snap.input);
+        const id = ++version,
+          controller = new AbortController();
+        pending.set(id, { controller, race });
+        lastAttempt = copy(snap);
+        $("retry").hidden = true;
+        $("fallback").hidden = true;
+        updateControls();
+        setStatus(
+          `Creating scene ${snap.input.history.length + 1} for ${SETTINGS[snap.input.setting]}. Your previous scene stays available.`,
+          "loading",
+        );
+        trace(`Request ${id}: ${snap.source}, ${snap.scenario}.`);
+        const requestId = crypto.randomUUID();
+        try {
+          let payload;
+          for (let attempt = 1; attempt <= 2; attempt++) {
+            try {
+              payload = await responseFor(
+                snap,
+                controller.signal,
+                attempt,
+                requestId,
+              );
+              break;
+            } catch (error) {
+              if (
+                error.name === "AbortError" ||
+                !error.retryable ||
+                !snap.autoRetry ||
+                attempt === 2 ||
+                !canCommit(id, race)
+              )
+                throw error;
+              trace(`Request ${id}: retry 2 of 2 after 400 ms.`);
+              setStatus(
+                "Retrying once. Your previous scene stays available.",
+                "loading",
+              );
+              await delay(400, controller.signal);
+            }
+          }
+          commit(payload, snap, id, race);
+        } catch (error) {
+          if (!canCommit(id, race)) {
+            trace(`Request ${id}: ignored stale error or cancellation.`);
+            return;
+          }
+          if (error.name === "AbortError")
+            setStatus(
+              "Stopped. Your previous scene is still here.",
+              "canceled",
+            );
+          else {
+            setStatus(error.message, "error");
+            $("retry").hidden = !error.retryable;
+            $("fallback").hidden = false;
+            trace(
+              `Request ${id}: ${error.code || "invalid"}, previous scene retained.`,
+            );
+          }
+        } finally {
+          pending.delete(id);
+          updateControls();
+        }
+      }
+      function start() {
+        const cfg = currentConfig();
+        return runRequest(snapshot({ ...cfg, history: [] }));
+      }
+      function choose(id) {
+        if (!game || !sameConfig() || pending.size) return;
+        const history = game.scenes.map((r, i) => ({
+          scene: copy(r.scene),
+          chosenId: i === game.scenes.length - 1 ? id : r.chosenId,
+        }));
+        return runRequest(
+          snapshot({ setting: game.setting, tone: game.tone, history }),
+        );
+      }
+      $("start").addEventListener("click", start);
+      $("cancel").addEventListener("click", () => cancelPending());
+      $("retry").addEventListener(
+        "click",
+        () => lastAttempt && runRequest(copy(lastAttempt)),
+      );
+      $("fallback").addEventListener(
+        "click",
+        () =>
+          lastAttempt &&
+          runRequest({
+            ...copy(lastAttempt),
+            source: "authored",
+            scenario: "normal",
+            autoRetry: false,
+          }),
+      );
+      $("back").addEventListener("click", () => {
+        cancelPending("", true);
+        game.scenes.pop();
+        game.scenes.at(-1).chosenId = null;
+        $("setting").value = game.setting;
+        $("tone").value = game.tone;
+        renderScene();
+        setStatus(
+          "Previous scene restored. Choose a different path.",
+          "success",
+        );
+      });
+      for (const id of ["setting", "tone"])
+        $(id).addEventListener("change", () => {
+          cancelPending(
+            "Selection changed. Start a new adventure. Your previous story stays here.",
+          );
+          updateControls();
+        });
+      for (const id of ["source", "endpoint"])
+        $(id).addEventListener("change", () => {
+          cancelPending(
+            "Source changed. The existing scene keeps its original label.",
+          );
+          updateSource();
+        });
+      function updateSource() {
+        $("modeNotice").textContent =
+          $("source").value === "ai"
+            ? "Next normal request uses real AI."
+            : "Next normal request uses the authored baseline. No AI call.";
+      }
+      $("toolsToggle").addEventListener("click", () => {
+        const open = $("tools").hidden;
+        $("tools").hidden = !open;
+        $("toolsToggle").textContent = open
+          ? "Hide presenter tools"
+          : "Presenter tools";
+        $("toolsToggle").setAttribute("aria-expanded", String(open));
+      });
+      $("testSample").addEventListener("change", fillTest);
+      function fillTest() {
+        const input = { ...currentConfig(), history: [] };
+        const value = authoredScene(toAuthored(input)),
+          kind = $("testSample").value;
+        if (kind === "extra") value.score = 9999;
+        if (kind === "missing") delete value.choices;
+        if (kind === "markup")
+          value.text =
+            '<img src=x onerror="alert(1)"> appears as text. Choose a path below.';
+        if (kind === "wrongEnding") value.ending = true;
+        $("testJSON").value =
+          kind === "malformed"
+            ? "{ not JSON }"
+            : JSON.stringify(value, null, 2);
+      }
+      $("applyTest").addEventListener("click", () => {
+        try {
+          if ($("testJSON").value.length > 5000)
+            throw new Error("The test payload is too long.");
+          const scene = JSON.parse($("testJSON").value);
+          validateScene(scene, 1);
+          cancelPending("", true);
+          commit(
+            { scene, origin: "Injected test · no AI call" },
+            { input: { ...currentConfig(), history: [] }, priorOrigins: [] },
+            version,
+          );
+          $("testMessage").textContent =
+            "Accepted as a labeled test. Strings rendered as text.";
+        } catch (error) {
+          $("testMessage").textContent = `Rejected: ${error.message}`;
+          trace("Contract test rejected. Previous adventure retained.");
+        }
+      });
+      $("replay").addEventListener("click", async () => {
+        cancelPending("", true);
+        const epoch = version;
+        $("tone").value = "mysterious";
+        $("setting").value = "library";
+        const common = {
+          source: "authored",
+          scenario: "normal",
+          autoRetry: false,
+          priorOrigins: [],
+        };
+        runRequest(
+          {
+            ...common,
+            input: { setting: "library", tone: "mysterious", history: [] },
+            raceDelay: 4000,
+          },
+          { race: true },
+        );
+        await delay(200, new AbortController().signal);
+        if (cancelEpoch > epoch) return;
+        $("setting").value = "station";
+        runRequest(
+          {
+            ...common,
+            input: { setting: "station", tone: "mysterious", history: [] },
+            raceDelay: 1000,
+          },
+          { race: true },
+        );
+      });
+      $("guard").addEventListener("change", () =>
+        cancelPending("Timing guard changed. Run a fresh replay."),
+      );
+      function validateSaved(value) {
+        if (
+          !value ||
+          typeof value !== "object" ||
+          !SETTINGS[value.setting] ||
+          !TONES[value.tone] ||
+          !Array.isArray(value.scenes) ||
+          value.scenes.length < 1 ||
+          value.scenes.length > 3
+        )
+          throw new Error("Invalid saved adventure.");
+        for (const [i, r] of value.scenes.entries()) {
+          validateScene(r.scene, i + 1);
+          boundedText(r.origin, 160, "Origin");
+          if (
+            i < value.scenes.length - 1 &&
+            !r.scene.choices.some((c) => c.id === r.chosenId)
+          )
+            throw new Error("Invalid saved choice.");
+        }
+        return value;
+      }
+      function writeSaved() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+          return true;
+        } catch {
+          return false;
+        }
+      }
+      try {
+        saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (!Array.isArray(saved)) saved = [];
+        saved = saved.slice(0, 10).filter((x) => {
+          try {
+            validateSaved(x);
+            return true;
+          } catch {
+            return false;
+          }
+        });
+      } catch {
+        saved = [];
+      }
+      function renderSaved() {
+        $("savedCount").textContent = String(saved.length);
+        $("savedList").replaceChildren();
+        for (const [i, item] of saved.entries()) {
+          const row = document.createElement("li"),
+            label = document.createElement("span");
+          label.textContent = `${SETTINGS[item.setting]} · ${item.scenes.at(-1).scene.title}`;
+          const load = document.createElement("button");
+          load.className = "secondary";
+          load.textContent = "Load";
+          load.addEventListener("click", () => {
+            cancelPending("", true);
+            game = copy(item);
+            $("setting").value = game.setting;
+            $("tone").value = game.tone;
+            renderScene();
+            setStatus(
+              "Saved adventure restored with its original context.",
+              "success",
+            );
+          });
+          const remove = document.createElement("button");
+          remove.className = "quiet";
+          remove.textContent = "Remove";
+          remove.addEventListener("click", () => {
+            saved.splice(i, 1);
+            writeSaved();
+            renderSaved();
+          });
+          row.append(label, load, remove);
+          $("savedList").append(row);
+        }
+      }
+      $("keep").addEventListener("click", () => {
+        if (!game) return;
+        validateSaved(game);
+        saved.unshift(copy(game));
+        saved = saved.slice(0, 10);
+        const persisted = writeSaved();
+        renderSaved();
+        setStatus(
+          persisted
+            ? "Kept this version in this browser."
+            : "Kept for this session. Storage is unavailable. Export a copy.",
+          "success",
+        );
+      });
+      $("export").addEventListener("click", () => {
+        const blob = new Blob([JSON.stringify(saved, null, 2)], {
+            type: "application/json",
+          }),
+          url = URL.createObjectURL(blob),
+          a = document.createElement("a");
+        a.href = url;
+        a.download = "tiny-adventures.json";
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      });
+      $("source").value = stage === 3 ? "authored" : "ai";
+      $("endpoint").value = location.protocol.startsWith("http")
+        ? location.origin
+        : "http://127.0.0.1:8787";
+      renderScene();
+      renderSaved();
+      fillTest();
+      updateSource();
+    </script>
+  <script data-backstage>
+// Backstage controls stay out of the audience interface. Alt+P toggles them.
+if (typeof window !== 'undefined') window.addEventListener('keydown', event => {
+ if (!event.altKey || event.key.toLowerCase() !== 'p' || event.repeat) return;
+ event.preventDefault();
+ const panel = document.getElementById('tools');
+ panel.hidden = !panel.hidden;
+ if (!panel.hidden) { panel.open = true; panel.scrollIntoView({behavior:'instant',block:'nearest'}); }
+});
+</script></body>
+</html>
